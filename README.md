@@ -24,3 +24,10 @@
 * 准备了解一下 ros 的相关概念和语法？
 * ros 进行自动驾驶开发过程？
 
+### 2023-04-09
+
+* 网站老是崩 进行离线安装
+* 下载又慢又容易崩
+* [基于ros的路径规划](https://www.zhihu.com/search?type=content&q=%E5%9F%BA%E4%BA%8Eros%E7%9A%84%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92)
+* [ros入门](https://www.bilibili.com/video/BV1Ci4y1L7ZZ/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=c68460d92fb2b166884357ad8c98de03)
+* [ros入门文档](http://www.autolabor.com.cn/book/ROSTutorials/chapter1.html)
