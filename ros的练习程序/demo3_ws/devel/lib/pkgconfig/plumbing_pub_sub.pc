@@ -1,0 +1,8 @@
+prefix=/home/help/ros_demo/demo3_ws/devel
+
+Name: plumbing_pub_sub
+Description: Description of plumbing_pub_sub
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
