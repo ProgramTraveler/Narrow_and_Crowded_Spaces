@@ -147,6 +147,7 @@ include_directories(
 add_executable(demo1_puh src/demo1_puh.cpp)
 add_executable(demo2_sub src/demo2_sub.cpp)
 add_executable(demo3_pub_person src/demo3_pub_person.cpp)
+add_executable(demo4_sub_person src/demo4_sub_person.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -158,17 +159,20 @@ add_executable(demo3_pub_person src/demo3_pub_person.cpp)
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(demo3_pub_person ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(demo4_sub_person ${PROJECT_NAME}_generate_messages_cpp)
+
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(demo1_puh
   ${catkin_LIBRARIES}
 )
-
 target_link_libraries(demo2_sub
   ${catkin_LIBRARIES}
 )
-
 target_link_libraries(demo3_pub_person
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(demo4_sub_person
   ${catkin_LIBRARIES}
 )
 

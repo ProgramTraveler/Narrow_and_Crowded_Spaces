@@ -15,7 +15,7 @@ int main (int argc, char *argv[]) {
     setlocale(LC_ALL, "");
     ROS_INFO("消息发布方");
     // 初始化 ros 节点
-    ros::init(argc, argv, "person");
+    ros::init(argc, argv, "person"); // 节点名称
     // 创建节点句柄
     ros::NodeHandle nh;
     // 创建发布者对象

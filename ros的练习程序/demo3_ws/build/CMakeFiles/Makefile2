@@ -137,6 +137,7 @@ gtest/googletest/clean: gtest/googletest/CMakeFiles/gtest.dir/clean
 
 # Recursive "all" directory target.
 plumbing_pub_sub/all: plumbing_pub_sub/CMakeFiles/demo3_pub_person.dir/all
+plumbing_pub_sub/all: plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/all
 plumbing_pub_sub/all: plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages.dir/all
 plumbing_pub_sub/all: plumbing_pub_sub/CMakeFiles/demo1_puh.dir/all
 plumbing_pub_sub/all: plumbing_pub_sub/CMakeFiles/demo2_sub.dir/all
@@ -162,6 +163,7 @@ plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_me
 plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/clean
 plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/roscpp_generate_messages_nodejs.dir/clean
 plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/std_msgs_generate_messages_eus.dir/clean
+plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/clean
 plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/roscpp_generate_messages_py.dir/clean
 plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/clean
 plumbing_pub_sub/clean: plumbing_pub_sub/CMakeFiles/roscpp_generate_messages_eus.dir/clean
@@ -325,7 +327,7 @@ gtest/googlemock/CMakeFiles/gmock_main.dir/all: gtest/googlemock/CMakeFiles/gmoc
 gtest/googlemock/CMakeFiles/gmock_main.dir/all: gtest/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock_main.dir/build.make gtest/googlemock/CMakeFiles/gmock_main.dir/depend
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock_main.dir/build.make gtest/googlemock/CMakeFiles/gmock_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=9,10 "Built target gmock_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=11,12 "Built target gmock_main"
 .PHONY : gtest/googlemock/CMakeFiles/gmock_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -352,7 +354,7 @@ gtest/googlemock/CMakeFiles/gmock_main.dir/clean:
 gtest/googlemock/CMakeFiles/gmock.dir/all: gtest/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock.dir/build.make gtest/googlemock/CMakeFiles/gmock.dir/depend
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock.dir/build.make gtest/googlemock/CMakeFiles/gmock.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=7,8 "Built target gmock"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=9,10 "Built target gmock"
 .PHONY : gtest/googlemock/CMakeFiles/gmock.dir/all
 
 # Build rule for subdir invocation for target.
@@ -379,7 +381,7 @@ gtest/googlemock/CMakeFiles/gmock.dir/clean:
 gtest/googletest/CMakeFiles/gtest_main.dir/all: gtest/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest/googletest/CMakeFiles/gtest_main.dir/build.make gtest/googletest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) -f gtest/googletest/CMakeFiles/gtest_main.dir/build.make gtest/googletest/CMakeFiles/gtest_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=13,14 "Built target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=15,16 "Built target gtest_main"
 .PHONY : gtest/googletest/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -406,7 +408,7 @@ gtest/googletest/CMakeFiles/gtest_main.dir/clean:
 gtest/googletest/CMakeFiles/gtest.dir/all:
 	$(MAKE) -f gtest/googletest/CMakeFiles/gtest.dir/build.make gtest/googletest/CMakeFiles/gtest.dir/depend
 	$(MAKE) -f gtest/googletest/CMakeFiles/gtest.dir/build.make gtest/googletest/CMakeFiles/gtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=11,12 "Built target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=13,14 "Built target gtest"
 .PHONY : gtest/googletest/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -515,7 +517,7 @@ plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_lisp.dir/all: plu
 plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_lisp.dir/all: plumbing_pub_sub/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_lisp.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_lisp.dir/depend
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_lisp.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_lisp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=18 "Built target plumbing_pub_sub_generate_messages_lisp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=20 "Built target plumbing_pub_sub_generate_messages_lisp"
 .PHONY : plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_lisp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -678,7 +680,7 @@ plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_eus.dir/all: plum
 plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_eus.dir/all: plumbing_pub_sub/CMakeFiles/_plumbing_pub_sub_generate_messages_check_deps_person.dir/all
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_eus.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_eus.dir/depend
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_eus.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_eus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=16,17 "Built target plumbing_pub_sub_generate_messages_eus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=18,19 "Built target plumbing_pub_sub_generate_messages_eus"
 .PHONY : plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_eus.dir/all
 
 # Build rule for subdir invocation for target.
@@ -778,6 +780,33 @@ std_msgs_generate_messages_eus: plumbing_pub_sub/CMakeFiles/std_msgs_generate_me
 plumbing_pub_sub/CMakeFiles/std_msgs_generate_messages_eus.dir/clean:
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/std_msgs_generate_messages_eus.dir/build.make plumbing_pub_sub/CMakeFiles/std_msgs_generate_messages_eus.dir/clean
 .PHONY : plumbing_pub_sub/CMakeFiles/std_msgs_generate_messages_eus.dir/clean
+
+#=============================================================================
+# Target rules for target plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir
+
+# All Build rule for target.
+plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/all: plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/all
+	$(MAKE) -f plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/build.make plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/depend
+	$(MAKE) -f plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/build.make plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=7,8 "Built target demo4_sub_person"
+.PHONY : plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/all
+
+# Build rule for subdir invocation for target.
+plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/help/ros_demo/demo3_ws/build/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/help/ros_demo/demo3_ws/build/CMakeFiles 0
+.PHONY : plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/rule
+
+# Convenience name for target.
+demo4_sub_person: plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/rule
+
+.PHONY : demo4_sub_person
+
+# clean rule for target.
+plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/clean:
+	$(MAKE) -f plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/build.make plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/clean
+.PHONY : plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/clean
 
 #=============================================================================
 # Target rules for target plumbing_pub_sub/CMakeFiles/roscpp_generate_messages_py.dir
@@ -980,7 +1009,7 @@ plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_nodejs.dir/all: p
 plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_nodejs.dir/all: plumbing_pub_sub/CMakeFiles/_plumbing_pub_sub_generate_messages_check_deps_person.dir/all
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_nodejs.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_nodejs.dir/depend
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_nodejs.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_nodejs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=19 "Built target plumbing_pub_sub_generate_messages_nodejs"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=21 "Built target plumbing_pub_sub_generate_messages_nodejs"
 .PHONY : plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_nodejs.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1062,7 +1091,7 @@ plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/all: plum
 plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/all: plumbing_pub_sub/CMakeFiles/_plumbing_pub_sub_generate_messages_check_deps_person.dir/all
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/depend
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=15 "Built target plumbing_pub_sub_generate_messages_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=17 "Built target plumbing_pub_sub_generate_messages_cpp"
 .PHONY : plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_cpp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1171,7 +1200,7 @@ plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_py.dir/all: plumb
 plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_py.dir/all: plumbing_pub_sub/CMakeFiles/_plumbing_pub_sub_generate_messages_check_deps_person.dir/all
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_py.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_py.dir/depend
 	$(MAKE) -f plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_py.dir/build.make plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_py.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=20,21 "Built target plumbing_pub_sub_generate_messages_py"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/help/ros_demo/demo3_ws/build/CMakeFiles --progress-num=22,23 "Built target plumbing_pub_sub_generate_messages_py"
 .PHONY : plumbing_pub_sub/CMakeFiles/plumbing_pub_sub_generate_messages_py.dir/all
 
 # Build rule for subdir invocation for target.

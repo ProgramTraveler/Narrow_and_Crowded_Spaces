@@ -454,6 +454,19 @@ std_msgs_generate_messages_eus/fast:
 .PHONY : std_msgs_generate_messages_eus/fast
 
 #=============================================================================
+# Target rules for targets named demo4_sub_person
+
+# Build rule for target.
+demo4_sub_person: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 demo4_sub_person
+.PHONY : demo4_sub_person
+
+# fast build rule for target.
+demo4_sub_person/fast:
+	$(MAKE) -f plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/build.make plumbing_pub_sub/CMakeFiles/demo4_sub_person.dir/build
+.PHONY : demo4_sub_person/fast
+
+#=============================================================================
 # Target rules for targets named roscpp_generate_messages_py
 
 # Build rule for target.
@@ -709,6 +722,7 @@ help:
 	@echo "... rosgraph_msgs_generate_messages_cpp"
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... std_msgs_generate_messages_eus"
+	@echo "... demo4_sub_person"
 	@echo "... roscpp_generate_messages_py"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_eus"
