@@ -2,11 +2,11 @@
 
 ## 问题
 
-* 在open space空间下规划出⼀条⾃⻋到停⻋位的⽆碰撞轨迹 满⾜平滑约束 可跟踪
+* 在 open space 空间下规划出⼀条⾃⻋到停⻋位的⽆碰撞轨迹 满⾜平滑约束 可跟踪
 * 考虑动态障碍物约束
 * 在路径不可⽤的情况下 具备重规划能⼒
 * 重规划时能够做到⽆缝切换 即从原路径⽆缝切换到重规划路径 ⽆明显体感
-* 规划频率10HZ
+* 规划频率 10HZ
 
 ## 预实现目标
 
@@ -17,7 +17,7 @@
 
 ## 预计时间
 
-* 2个月
+* 2 个月
 
 ---
 
@@ -45,14 +45,14 @@
 * [ros入门](https://www.bilibili.com/video/BV1Ci4y1L7ZZ/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=c68460d92fb2b166884357ad8c98de03)
 * [ros入门文档](http://www.autolabor.com.cn/book/ROSTutorials/chapter1.html)
 * 为了以后方便还是准备装 linux
-* 之前 virtualbox 在 win11 出来的时候有bug 就删掉了 现在应该已经修复了
+* 之前 virtualbox 在 win11 出来的时候有 bug 就删掉了 现在应该已经修复了
 
 ### 2023-04-10
 
 * 完成 linux 下的 ros 安装
 * ros 集成开发环境搭建
 
-### 2023-04-11 -> 2023-04-16
+### 2023-04-11 -> 04-16
 
 * 了解 ros 的开发过程
 * 了解 ros 的通信机制
@@ -64,9 +64,10 @@
 
 * 预计 4 月 20 号完成
 
-### 2023-04-16
+### 2023-04-16 -> 04-17
 
 * URDF 语法
+* xacro
 
 ---
 
