@@ -1,0 +1,8 @@
+prefix=/home/help/parking_planning_ws/devel
+
+Name: planning
+Description: Description of planning
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
