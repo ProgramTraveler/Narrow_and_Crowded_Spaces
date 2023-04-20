@@ -1,2 +1,0 @@
-tf1_tfs
--DCATKIN_DEVEL_PREFIX=/home/help/ros_demo/mult_coordinates_ws/devel -DCMAKE_INSTALL_PREFIX=/home/help/ros_demo/mult_coordinates_ws/install -G Unix Makefiles
