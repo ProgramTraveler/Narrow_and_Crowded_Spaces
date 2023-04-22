@@ -1,21 +1,21 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
 Change Dir: /home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_bab6c/fast && /usr/bin/make -f CMakeFiles/cmTC_bab6c.dir/build.make CMakeFiles/cmTC_bab6c.dir/build
+Run Build Command(s):/usr/bin/make cmTC_05737/fast && /usr/bin/make -f CMakeFiles/cmTC_05737.dir/build.make CMakeFiles/cmTC_05737.dir/build
 make[1]: 进入目录“/home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp”
-Building C object CMakeFiles/cmTC_bab6c.dir/src.c.o
-/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_bab6c.dir/src.c.o   -c /home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp/src.c
-Linking C executable cmTC_bab6c
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bab6c.dir/link.txt --verbose=1
-/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    -rdynamic CMakeFiles/cmTC_bab6c.dir/src.c.o  -o cmTC_bab6c 
-/usr/bin/ld: CMakeFiles/cmTC_bab6c.dir/src.c.o: in function `main':
+Building C object CMakeFiles/cmTC_05737.dir/src.c.o
+/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_05737.dir/src.c.o   -c /home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_05737
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_05737.dir/link.txt --verbose=1
+/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    -rdynamic CMakeFiles/cmTC_05737.dir/src.c.o  -o cmTC_05737 
+/usr/bin/ld: CMakeFiles/cmTC_05737.dir/src.c.o: in function `main':
 src.c:(.text+0x46): undefined reference to `pthread_create'
 /usr/bin/ld: src.c:(.text+0x52): undefined reference to `pthread_detach'
 /usr/bin/ld: src.c:(.text+0x63): undefined reference to `pthread_join'
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_bab6c.dir/build.make:87：cmTC_bab6c] 错误 1
+make[1]: *** [CMakeFiles/cmTC_05737.dir/build.make:87：cmTC_05737] 错误 1
 make[1]: 离开目录“/home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp”
-make: *** [Makefile:121：cmTC_bab6c/fast] 错误 2
+make: *** [Makefile:121：cmTC_05737/fast] 错误 2
 
 
 Source file was:
@@ -41,18 +41,18 @@ int main(void)
 Determining if the function pthread_create exists in the pthreads failed with the following output:
 Change Dir: /home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_f469e/fast && /usr/bin/make -f CMakeFiles/cmTC_f469e.dir/build.make CMakeFiles/cmTC_f469e.dir/build
+Run Build Command(s):/usr/bin/make cmTC_43967/fast && /usr/bin/make -f CMakeFiles/cmTC_43967.dir/build.make CMakeFiles/cmTC_43967.dir/build
 make[1]: 进入目录“/home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp”
-Building C object CMakeFiles/cmTC_f469e.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_f469e.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
-Linking C executable cmTC_f469e
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f469e.dir/link.txt --verbose=1
-/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_f469e.dir/CheckFunctionExists.c.o  -o cmTC_f469e  -lpthreads 
+Building C object CMakeFiles/cmTC_43967.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_43967.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
+Linking C executable cmTC_43967
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_43967.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_43967.dir/CheckFunctionExists.c.o  -o cmTC_43967  -lpthreads 
 /usr/bin/ld: 找不到 -lpthreads
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_f469e.dir/build.make:87：cmTC_f469e] 错误 1
+make[1]: *** [CMakeFiles/cmTC_43967.dir/build.make:87：cmTC_43967] 错误 1
 make[1]: 离开目录“/home/help/parking_planning_ws/build/CMakeFiles/CMakeTmp”
-make: *** [Makefile:121：cmTC_f469e/fast] 错误 2
+make: *** [Makefile:121：cmTC_43967/fast] 错误 2
 
 
 

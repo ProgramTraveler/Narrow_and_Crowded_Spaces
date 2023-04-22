@@ -1,8 +1,8 @@
-#ifndef HYBRID_A_STAR_INIT_POSE_SUBSCRIBER_H
-#define HYBRID_A_STAR_INIT_POSE_SUBSCRIBER_H
+#ifndef PLANNING_INIT_POSE_SUBSCRIBER_H
+#define PLANNING_INIT_POSE_SUBSCRIBER_H
 
 #include "ros/ros.h"
-#include "geometry_msgs/PoseWithCovarianceStamped.h"
+#include "geometry_msgs/PoseWithCovarianceStamped.h" // An estimated pose with a reference coordinate frame and timestamp
 
 #include "deque"
 #include "mutex"
