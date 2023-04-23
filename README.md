@@ -101,6 +101,6 @@
 ```cpp 
 sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen 
 ```
-* 对传入的车辆位姿信息进行
+* 对传入的车辆信息进行初始化 并解析位姿信息
 
 ---
