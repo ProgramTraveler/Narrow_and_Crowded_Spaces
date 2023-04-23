@@ -94,4 +94,13 @@
 * 完成初始车辆姿态订阅
 * 完成目标车辆姿态订阅
 
+### 2023-04-23
+
+* 实现对传入的车辆姿态信息解析
+* 安装了 Eigen 但还是报错 No such file or directory -> 因为 eigen 库默认安装在 /usr/include/eigen3/Eigen 需映射到 /usr/include 路径下  
+```cpp 
+sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen 
+```
+* 对传入的车辆位姿信息进行
+
 ---
