@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   tf
+  nav_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -72,6 +73,7 @@ find_package(catkin REQUIRED COMPONENTS
 # generate_messages(
 #   DEPENDENCIES
 #   std_msgs
+
 # )
 
 ################################################
@@ -106,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES planning
-CATKIN_DEPENDS map_server roscpp std_msgs tf
+CATKIN_DEPENDS map_server roscpp std_msgs tf nav_msgs
 #  DEPENDS system_lib
 )
 
@@ -124,11 +126,17 @@ include
 ## Declare a C++ library
 
 add_library(head_src
+  include/${PROJECT_NAME}/type.h
+
   include/${PROJECT_NAME}/init_pose_subscriber.h
   src/init_pose_subscriber.cpp
   
   include/${PROJECT_NAME}/goal_pose_subscriber.h
   src/goal_pose_subscriber.cpp
+  
+  include/${PROJECT_NAME}/planning_method_flow.h
+  src/planning_method_flow.cpp
+
 )
 
 ## Add cmake target dependencies of the library
@@ -165,7 +173,7 @@ target_link_libraries(head_src
   ${catkin_LIBRARIES}
 )
 target_link_libraries(run_planning
-  
+  head_src
   ${catkin_LIBRARIES}
 )
 # target_link_libraries(init_pose_subscriber

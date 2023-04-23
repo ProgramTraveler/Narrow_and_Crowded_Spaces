@@ -13,7 +13,7 @@ public:
     void ParseData(std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> &pose_data_buff);
 
 private:
-    void MessgeCallBack(const geometry_msgs::PoseWithCovarianceStampedPtr &init_pose_ptr);
+    void MessgeCallBack(const geometry_msgs::PoseWithCovarianceStampedPtr &init_pose_ptr); // 回调函数
 
 private:
     ros::Subscriber subscriber_;

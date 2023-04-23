@@ -14,6 +14,7 @@ void InitPoseSubscriber2D::ParseData(std::deque<geometry_msgs::PoseWithCovarianc
     buff_mutex_.lock();
 
     if (!init_poses_.empty()) {
+        // 组合数据
         pose_data_buff.insert(pose_data_buff.end(), init_poses_.begin(), init_poses_.end());
 
         init_poses_.clear();

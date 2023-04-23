@@ -11,7 +11,7 @@
 
     <node pkg="map_server" type="map_server" name="map_server" args="$(find planning)/maps/map.yaml" />
     
-    <!-- <node pkg="planning" type="run_planning" name="run_planning" output="screen">
+    <node pkg="planning" type="run_planning" name="run_planning" output="screen">
         <param name="planner/steering_angle" value="15.0" />
         <param name="planner/steering_angle_discrete_num" value="1" />
         <param name="planner/wheel_base" value="2.0" />
@@ -21,6 +21,6 @@
         <param name="planner/reversing_penalty" value="3.0" />
         <param name="planner/steering_change_penalty" value="2.0" />
         <param name="planner/shot_distance" value="5.0" />
-    </node> -->
+    </node>
 
 </launch>

@@ -14,7 +14,7 @@ public:
     void ParseData(std::deque<geometry_msgs::PoseStampedPtr> &pose_data_buff);
 
 private:
-    void MessageCallBack(const geometry_msgs::PoseStampedPtr &goal_pose_ptr);
+    void MessageCallBack(const geometry_msgs::PoseStampedPtr &goal_pose_ptr); // 回调函数
 
 private:
     ros::Subscriber subscriber_;
