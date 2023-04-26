@@ -25,7 +25,7 @@ struct StateNode {
 
     void Reset() {
         node_status_ = NOT_VISITED;
-        parent_node = nullptr;
+        parent_node_ = nullptr;
     }
 
     NODE_STATUS node_status_;
@@ -35,11 +35,11 @@ struct StateNode {
     Vec3d state_;
     Vec3i grid_index_;
 
-    double g_cost_{}, BOOST_PP_FOR_CHECK_BOOST_PP_FOR_100
+    double g_cost_{}, f_cost_{};
     int steering_grade_{};
 
     StateNode *parent_node_;
-    typedef StateNode *ptr;
+    typedef StateNode *Ptr;
 
     VectorVec3d intermediate_states_;
 };

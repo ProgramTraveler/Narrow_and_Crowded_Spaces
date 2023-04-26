@@ -4,6 +4,8 @@
 #include "map"
 #include "memory"
 #include "planning/state_node.h"
+#include "planning/rs_path.h"
+
 
 class PlanningMethod {
 public: 
@@ -27,8 +29,7 @@ public:
 
     VectorVec3d GetPath() const;
 
-    __attribute__((unused)) int GetVisitedNodesNumber() const { return visit_node_number_; }
-    // __attribute__((unused)) int GetVisitedNodesNumber() const { return visited_node_number_; }
+    __attribute__((unused)) int GetVisitedNodesNumber() const { return visited_node_number_; }
     
     __attribute__((unused)) double GetPathLength() const;
 
@@ -77,7 +78,7 @@ private:
 
     inline Vec2d MapGridIndex2Coordinate(const Vec2i &grid_index) const;
 
-    void GetNeighborNodes(const State::Ptr &curr_node_ptr, std::vector<StateNode::Ptr> &neighbor_nodes);
+    void GetNeighborNodes(const StateNode::Ptr &curr_node_ptr, std::vector<StateNode::Ptr> &neighbor_nodes);
 
     /*!
     * Simplified car model. Center of the rear axle

@@ -127,6 +127,8 @@ include
 
 add_library(head_src
   include/${PROJECT_NAME}/type.h
+  include/${PROJECT_NAME}/state_node.h
+  include/${PROJECT_NAME}/rs_path.h
 
   include/${PROJECT_NAME}/init_pose_subscriber.h
   src/init_pose_subscriber.cpp
@@ -143,9 +145,6 @@ add_library(head_src
   include/${PROJECT_NAME}/planning_method.h
   src/planning_method.cpp
 
-  include/${PROJECT_NAME}/state_node.h
-  
-  include/${PROJECT_NAME}/rs_path.h
 )
 
 ## Add cmake target dependencies of the library
