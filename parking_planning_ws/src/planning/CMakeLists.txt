@@ -136,7 +136,16 @@ add_library(head_src
   
   include/${PROJECT_NAME}/planning_method_flow.h
   src/planning_method_flow.cpp
+  
+  include/${PROJECT_NAME}/costmap_subscriber.h
+  src/costmap_subscriber.cpp
 
+  include/${PROJECT_NAME}/planning_method.h
+  src/planning_method.cpp
+
+  include/${PROJECT_NAME}/state_node.h
+  
+  include/${PROJECT_NAME}/rs_path.h
 )
 
 ## Add cmake target dependencies of the library

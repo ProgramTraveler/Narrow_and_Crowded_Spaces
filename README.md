@@ -112,6 +112,7 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 
 ### 2023-04-26
 
-* 
+* 代价地图
+* 继续 `混合A*` 算法
 
 ---

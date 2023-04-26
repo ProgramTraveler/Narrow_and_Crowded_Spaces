@@ -77,6 +77,18 @@ map
 -
 
 /home/help/parking_planning_ws/src/planning/include/planning/costmap_subscriber.h
+ros/ros.h
+/home/help/parking_planning_ws/src/planning/include/planning/ros/ros.h
+nav_msgs/OccupancyGrid.h
+/home/help/parking_planning_ws/src/planning/include/planning/nav_msgs/OccupancyGrid.h
+deque
+/home/help/parking_planning_ws/src/planning/include/planning/deque
+mutex
+/home/help/parking_planning_ws/src/planning/include/planning/mutex
+thread
+/home/help/parking_planning_ws/src/planning/include/planning/thread
+string
+/home/help/parking_planning_ws/src/planning/include/planning/string
 
 /home/help/parking_planning_ws/src/planning/include/planning/goal_pose_subscriber.h
 geometry_msgs/PoseStamped.h
