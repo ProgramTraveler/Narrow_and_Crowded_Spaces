@@ -7,11 +7,13 @@
 struct StateNode {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    enum NODE_STATUS {
-        NOT_VISITED = 0, IN_OPENSET = 1, IN_CLOSESET = 2
+    // enum -> 用于定义枚举类型
+
+    enum NODE_STATUS { // 定义节点状态
+        NOT_VISITED = 0, IN_OPENSET = 1, IN_CLOSESET = 2 
     };
 
-    enum DIRECTION {
+    enum DIRECTION { // 运动方向
         FORWARD = 0, BACKWARD = 1, NO = 3
     };
 

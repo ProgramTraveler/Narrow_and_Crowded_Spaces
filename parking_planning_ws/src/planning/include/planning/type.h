@@ -11,11 +11,11 @@ using TypeVectorVecd = typename std::vector<Eigen::Matrix<double, dim, 1>,
         Eigen::aligned_allocator<Eigen::Matrix<double, dim, 1>>>;
 
 typedef TypeVectorVecd<4> VectorVec4d;
-typedef TypeVectorVecd<3> VectorVec3d; // ?
+typedef TypeVectorVecd<3> VectorVec3d;
 typedef TypeVectorVecd<2> VectorVec2d;
 
 typedef typename Eigen::Vector2d Vec2d;
-typedef typename Eigen::Vector3d Vec3d; // ?
+typedef typename Eigen::Vector3d Vec3d; 
 typedef typename Eigen::Vector4d Vec4d;
 
 typedef typename Eigen::Vector2i Vec2i;

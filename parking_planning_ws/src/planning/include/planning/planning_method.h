@@ -59,6 +59,7 @@ public:
    void Reset();
 
 private:
+    // inline -> 内联函数
     inline bool HasObstacle(int grid_index_x, int grid_index_y) const;
 
     inline bool HasObstacle(const Vec2i &grid_index) const;
@@ -120,7 +121,7 @@ private:
     double tie_breaker_;
 
     double shot_distance_;
-    int segment_length_dicrete_num_;
+    int segment_length_discrete_num_;
     int steering_discrete_num_;
     double steering_penalty_;
     double reversing_penalty_;
