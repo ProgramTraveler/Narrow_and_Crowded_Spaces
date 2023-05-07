@@ -17,7 +17,6 @@ PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discret
     reversing_penalty_ = reversing_penalty;
     shot_distance_ = shot_distance;
 
-
 }
 
 PlanningMethod::~PlanningMethod() {
@@ -26,5 +25,9 @@ PlanningMethod::~PlanningMethod() {
 
 void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double y_upper, 
                     double state_grid_resolution, double map_grid_resolution) {
+    
+}
+
+void PlanningMethod::ReleaseMemory() {
 
 }

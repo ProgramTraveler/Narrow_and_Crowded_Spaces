@@ -42,6 +42,21 @@ void PlanningMethodFlow::Run() {
     ReadData();
 
     if (!has_map_) {
+        if (costmap_deque_.empty()) return ;
+
+        current_costmap_ptr_ = costmap_deque_.front();
+        costmap_deque_.pop_front();
+
+        const double map_resolution = 0.2;
+
+        kinodynamic_searcher_ptr_ -> Init(
+            current_costmap_ptr_ -> info.origin.position.x,
+            1.0 * current_costmap_ptr_ -> info.width * current_costmap_ptr_ -> info.resolution,
+            current_costmap_ptr_ -> info.origin.position.y,
+            1.0 * current_costmap_ptr_ -> info.height * current_costmap_ptr_ -> info.resolution,
+            current_costmap_ptr_ -> info.resolution,
+            map_resolution
+        );
 
     }
     
@@ -68,9 +83,10 @@ void PlanningMethodFlow::Run() {
 }
 
 void PlanningMethodFlow::ReadData() {
-    
     init_pose_sub_ptr_ -> ParseData(init_pose_deque_);
     goal_pose_sub_ptr_ -> ParseData(goal_pose_deque_);
+
+    costmap_sub_ptr_ -> ParseData(costmap_deque_);
 }
 
 void PlanningMethodFlow::InitPoseData() {
