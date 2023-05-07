@@ -115,10 +115,10 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 * 代价地图
 * 继续了解 `混合A*` 算法
 
-### 2023-05-05
+### 2023-05-07
 
-* 在IEEE Transactions on Intelligent Transportation Systems(TITS)上找找相关论文
-* `Fast A* Anchor Point based Path Planning for Narrow Space Parking` 
-* `Parking Planning Under Limited Parking Corridor Space`
+* 创建规划策略(planning_method)相关头文件
+* 设置参数 包括转向角、转向惩罚、倒车惩罚等
+* 
 
 ---
