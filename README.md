@@ -97,8 +97,11 @@
 ### 2023-04-23
 
 * 实现对传入的车辆姿态信息解析
+```word
+初始姿态使用PoseWithCovarianceStamped 而目标姿态使用PoseStamped 二者都是带有参考系和时间戳的姿态 主要的区别在于PoseWithCovarianceStamped消息类型包含一个协方差矩阵 用于表示姿态的不确定性
+```
 * 安装了 Eigen 但还是报错 No such file or directory -> 因为 eigen 库默认安装在 /usr/include/eigen3/Eigen 需映射到 /usr/include 路径下  
-```cpp 
+```word
 sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen 
 ```
 * 对传入的车辆信息进行初始化 并解析位姿信息
@@ -117,7 +120,8 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 
 ### 2023-05-07
 
-* 创建规划策略(planning_method)相关头文件
-* 设置参数 包括转向角、转向惩罚、倒车惩罚等
+* 创建规划策略(planning_method)相关文件(.h .cpp)
+* 设置参数 -> 包括转向角、转向惩罚、倒车惩罚等
+* 修改代价地图的消息类型
 
 ---
