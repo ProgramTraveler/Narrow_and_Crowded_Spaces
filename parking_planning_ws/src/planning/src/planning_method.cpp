@@ -17,6 +17,8 @@ PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discret
     reversing_penalty_ = reversing_penalty;
     shot_distance_ = shot_distance;
 
+    
+
 }
 
 PlanningMethod::~PlanningMethod() {

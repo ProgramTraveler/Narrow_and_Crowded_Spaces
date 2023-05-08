@@ -1,5 +1,10 @@
 #include "planning/goal_pose_subscriber.h"
+/*
+    geometry_msgs::PoseStamped 表示一个带有参考坐标系和时间戳的姿态
 
+        std_msgs/Header header
+        Pose pose
+*/
 GoalPoseSubscriber2D::GoalPoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name, size_t buff_size) {
     subscriber_ = nh.subscribe(topic_name, buff_size, &GoalPoseSubscriber2D::MessageCallBack, this);
 }

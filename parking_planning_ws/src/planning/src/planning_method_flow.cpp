@@ -41,13 +41,13 @@ PlanningMethodFlow::PlanningMethodFlow(ros::NodeHandle &nh) { // 初始化
 void PlanningMethodFlow::Run() {
     ReadData();
 
-    if (!has_map_) {
+    if (!has_map_) { // 读入地图信息
         if (costmap_deque_.empty()) return ;
 
         current_costmap_ptr_ = costmap_deque_.front();
         costmap_deque_.pop_front();
 
-        const double map_resolution = 0.2;
+        const double map_resolution = 0.2; // 地图分辨率
 
         kinodynamic_searcher_ptr_ -> Init(
             current_costmap_ptr_ -> info.origin.position.x,
@@ -83,8 +83,8 @@ void PlanningMethodFlow::Run() {
 }
 
 void PlanningMethodFlow::ReadData() {
-    init_pose_sub_ptr_ -> ParseData(init_pose_deque_);
-    goal_pose_sub_ptr_ -> ParseData(goal_pose_deque_);
+    init_pose_sub_ptr_ -> ParseData(init_pose_deque_); // 获取初始位置信息 -> init_pose_deque_
+    goal_pose_sub_ptr_ -> ParseData(goal_pose_deque_); // 获取目标位置信息 -> goal_pose_deque_
 
     costmap_sub_ptr_ -> ParseData(costmap_deque_);
 }

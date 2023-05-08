@@ -1,5 +1,12 @@
 #include "planning/init_pose_subscriber.h"
 
+/*
+    geometry_msgs::PoseWithCovarianceStamped 表示一个带有参考坐标系和时间戳的估计姿态
+
+        std_msgs/Header header
+        PoseWithCovariance pose
+*/
+
 InitPoseSubscriber2D::InitPoseSubscriber2D(ros::NodeHandle &nh, const std::string &topic_name, size_t buff_size) {
     subscriber_ = nh.subscribe(topic_name, buff_size, &InitPoseSubscriber2D::MessgeCallBack, this);
 }
