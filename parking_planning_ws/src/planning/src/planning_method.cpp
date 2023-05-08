@@ -1,4 +1,5 @@
 #include "planning/planning_method.h"
+#include "planning/timer.h"
 
 PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discrete_num, double segment_length, 
                                 int segment_length_discrete_num, double wheel_base, double steering_penalty,
@@ -7,11 +8,18 @@ PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discret
     
     wheel_base_ = wheel_base;
     segment_length_ = segment_length;
+
     steering_radian_ = steering_angle * M_PI / 180.0; // 将角度变为弧度
     steering_discrete_num_ = steering_angle_discrete_num;
+
     steering_radian_step_size_ = steering_radian_ / steering_discrete_num_; //
-    move_step_size_ = segment_length / segment_length_discrete_num; //
-    segment_length_discrete_num_ = static_cast<int>(segment_length_discrete_num); //
+
+    move_step_size_ = segment_length / segment_length_discrete_num; // 移动的步长
+
+    // static_cast 是 c++ 中的类型转换运算符
+    // static_cast<int>(segment_length_discrete_num) -> 将 segment_length_discrete_num 值转换为 int
+    segment_length_discrete_num_ = static_cast<int>(segment_length_discrete_num);
+
     steering_penalty_ = steering_penalty;
     steering_change_penalty_ = steering_change_penalty;
     reversing_penalty_ = reversing_penalty;
@@ -42,7 +50,7 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
     MAP_GRID_SIZE_X_ = std::floor((map_x_upper_ - map_x_lower_) / MAP_GRID_RESOLUTION_);
     MAP_GRID_SIZE_Y_ = std::floor((map_y_upper_ - map_y_lower_) / MAP_GRID_RESOLUTION_);
 
-    if (map_data_) {
+    if (map_data_) { // 清除一下
         delete[] map_data_;
 
         map_data_ = nullptr;
@@ -50,7 +58,7 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
 
     map_data_ = new uint8_t[MAP_GRID_SIZE_X_ * MAP_GRID_SIZE_Y_];
 
-    if (state_node_map_) {
+    if (state_node_map_) { // 清除一下
         for (int i = 0; i < STATE_GRID_SIZE_X_; i ++) {
             if (state_node_map_[i] == nullptr) continue;
 
@@ -60,7 +68,6 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
                 for (int k = 0; k < STATE_GRID_SIZE_PHI_; k ++) {
                     if (state_node_map_[i][j][k] != nullptr) {
                         delete[] state_node_map_[i][j][k];
-
                         state_node_map_[i][j][k] = nullptr;
                     }
                 }
@@ -71,17 +78,17 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
             delete[] state_node_map_[i];
             state_node_map_[i] = nullptr;
         }
+    }
 
-        state_node_map_ = new StateNode::Ptr **[STATE_GRID_SIZE_X_];
-        for (int i = 0; i < STATE_GRID_SIZE_X_; i ++) {
-            state_node_map_[i] = new StateNode::Ptr *[STATE_GRID_SIZE_Y_];
+    state_node_map_ = new StateNode::Ptr **[STATE_GRID_SIZE_X_];
+    for (int i = 0; i < STATE_GRID_SIZE_X_; i ++) {
+        state_node_map_[i] = new StateNode::Ptr *[STATE_GRID_SIZE_Y_];
 
-            for (int j = 0; j < STATE_GRID_SIZE_Y_; j ++) {
-                state_node_map_[i][j] = new StateNode::Ptr [STATE_GRID_SIZE_PHI_];
+        for (int j = 0; j < STATE_GRID_SIZE_Y_; j ++) {
+            state_node_map_[i][j] = new StateNode::Ptr [STATE_GRID_SIZE_PHI_];
 
-                for (int k = 0; k < STATE_GRID_SIZE_PHI_; k ++) {
-                    state_node_map_[i][j][k] = nullptr;
-                }
+            for (int k = 0; k < STATE_GRID_SIZE_PHI_; k ++) {
+                state_node_map_[i][j][k] = nullptr;
             }
         }
     }
@@ -114,8 +121,25 @@ void PlanningMethod::SetObstacle(const double pt_x, const double pt_y) {
 }
 
 
-void PlanningMethod::SetVehicleShape(double length, double width, double rear_axle_dist) {
+void PlanningMethod::SetVehicleShape(double length, double width, double rear_axle_dist) { // 长 宽 后轴距
+    /*!
+    * Set vehicle shape
+    * Consider the shape of the vehicle as a rectangle.
+    * @param length vehicle length (a to c)
+    * @param width vehicle width (a to d)
+    * @param rear_axle_dist Length from rear axle to rear (a to b)
+    *
+    *         b
+    *  a  ---------------- c
+    *    |    |          |    Front
+    *    |    |          |
+    *  d  ----------------
+    */
+
     vehicle_shape_.resize(8);
+    
+    // block 方法 访问矩阵子块
+    // block<2, 1>(0, 0) -> 从 (0, 0) 开始到 (1, 0) 的子块
     vehicle_shape_.block<2, 1>(0, 0) = Vec2d(-rear_axle_dist, width / 2);
     vehicle_shape_.block<2, 1>(2, 0) = Vec2d(length - rear_axle_dist, width / 2);
     vehicle_shape_.block<2, 1>(4, 0) = Vec2d(length - rear_axle_dist, -width / 2);
@@ -125,10 +149,10 @@ void PlanningMethod::SetVehicleShape(double length, double width, double rear_ax
     const auto N_length = static_cast<unsigned int>(length / step_size);
     const auto N_width = static_cast<unsigned int>(width / step_size);
 
-    vehicle_shape_discrete_.resize(2, (N_length + N_width) * 2u);
+    vehicle_shape_discrete_.resize(2, (N_length + N_width) * 2u); // 2u -> 值为 2 的无符号整数
 
     const Vec2d edge_0_normalized = (vehicle_shape_.block<2, 1>(2, 0) 
-                                    - vehicle_shape_.block<2, 1>(0, 0)).normalized();
+                                    - vehicle_shape_.block<2, 1>(0, 0)).normalized(); // 计算单位向量
 
     for (unsigned int i = 0; i < N_length; i ++) {
         vehicle_shape_discrete_.block<2, 1>(0, i + N_length) = vehicle_shape_.block<2, 1>(4, 0) 
@@ -191,6 +215,32 @@ void PlanningMethod::DynamicModel(const double &step_size, const double &phi, do
 // }
 
 bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
+    Timer search_use_time;
+
+    double neighbor_time = 0.0, compute_h_time = 0.0, compute_g_time = 0.0;
+
+    const Vec3i start_grid_index = State2Index(start_state);
+    const Vec3i goal_grid_index = State2Index(goal_state);
+
+    auto goal_node_ptr = new StateNode(goal_grid_index);
+    goal_node_ptr -> state_ = goal_state;
+    goal_node_ptr -> direction_ = StateNode::NO;
+    goal_node_ptr -> steering_grade_ = 0;
+
+    auto start_node_ptr = new StateNode(start_grid_index);
+    start_node_ptr -> state_ = goal_state;
+    start_node_ptr -> steering_grade_ = 0;
+    start_node_ptr -> direction_ = StateNode::NO;
+    start_node_ptr -> node_status_ = StateNode::IN_OPENSET;
+    start_node_ptr -> intermediate_states_.emplace_back(start_state);
+    start_node_ptr -> g_cost_ = 0.0;
+    start_node_ptr -> f_cost_ = ComputeH(start_node_ptr, goal_node_ptr);
+
+    state_node_map_[start_grid_index.x()][start_grid_index.y()][start_grid_index.z()] = start_node_ptr;
+    state_node_map_[goal_grid_index.x()][goal_grid_index.y()][goal_grid_index.z()] = goal_node_ptr;
+
+
+    return false;
 
 }
 

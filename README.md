@@ -126,6 +126,8 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 
 ### 2023-05-08
 
-* 
+* 设置车辆形状
+* 将状态节点抽象成一个类
+* 创建时间类 方便计算时间差
 
 ---

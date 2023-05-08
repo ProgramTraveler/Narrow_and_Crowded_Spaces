@@ -109,7 +109,7 @@ private:
     double map_x_lower_{}, map_x_upper_{}, map_y_lower_{}, map_y_upper_{};
 
     StateNode::Ptr terminal_node_ptr_ = nullptr;
-    StateNode::Ptr ***state_node_map_ = nullptr;
+    StateNode::Ptr ***state_node_map_ = nullptr; // 三级指针
 
     std::multimap<double, StateNode::Ptr> openset_;
 
