@@ -39,7 +39,7 @@ public:
 
     void SetObstacle(double pt_x, double pt_y);
 
-    void SetObstalce(unsigned int x, unsigned int y);
+    void SetObstacle(unsigned int x, unsigned int y);
     /*!
     * Set vehicle shape
     * Consider the shape of the vehicle as a rectangle.
@@ -68,7 +68,7 @@ private:
 
     inline bool LineCheck(double x0, double y0, double x1, double y1);
 
-    bool AnalyticExpansion(const StateNode::Ptr &current_node_ptr,
+    bool AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
                             const StateNode::Ptr &goal_node_ptr, double &length);
     
     inline double ComputeG(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &neighbor_node_ptr) const;
@@ -100,10 +100,10 @@ private:
    void ReleaseMemory();
 
 private:
-    uint8_t *map_data = nullptr;
+    uint8_t *map_data_ = nullptr;
     double STATE_GRID_RESOLUTION_{}, MAP_GRID_RESOLUTION_{};
     double ANGULAR_RESOLUTION_{};
-    int STATE_GRID_SIZE_X_{}, STATE_GRID_SIZE_Y_{}, STATE_GRID_SIZE_PI_{};
+    int STATE_GRID_SIZE_X_{}, STATE_GRID_SIZE_Y_{}, STATE_GRID_SIZE_PHI_{};
     int MAP_GRID_SIZE_X_{}, MAP_GRID_SIZE_Y_{};
 
     double map_x_lower_{}, map_x_upper_{}, map_y_lower_{}, map_y_upper_{};
@@ -132,7 +132,7 @@ private:
     std::shared_ptr<RSPath> rs_path_ptr_;
 
     VecXd vehicle_shape_;
-    MatXd vehicle_shape_dicrete_;
+    MatXd vehicle_shape_discrete_;
 
     double check_collision_use_time = 0.0;
     int num_chack_collision = 0;

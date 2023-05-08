@@ -58,7 +58,25 @@ void PlanningMethodFlow::Run() {
             map_resolution
         );
 
+        unsigned int map_w = std::floor(current_costmap_ptr_ -> info.width / map_resolution);
+        unsigned int map_h = std::floor(current_costmap_ptr_ -> info.height / map_resolution);
+
+        for (unsigned int w = 0; w < map_w; w ++) {
+            for (unsigned int h = 0; h < map_h; h ++) {
+                auto x = static_cast<unsigned int>((w + 0.5) * map_resolution / current_costmap_ptr_ -> info.resolution);
+                auto y = static_cast<unsigned int>((h + 0.5) * map_resolution / current_costmap_ptr_ -> info.resolution);
+
+                if (current_costmap_ptr_ -> data[y * current_costmap_ptr_ -> info.width + x]) {
+                    kinodynamic_searcher_ptr_ -> SetObstacle(w, h);
+                }
+            }
+        }
+
+        has_map_ = true;
+
     }
+
+    costmap_deque_.clear();
     
     while (HasStartPose() && HasGoalPose()) { // 初始位姿和目标位姿队列不为空
         // 获取当前位姿信息
@@ -79,6 +97,9 @@ void PlanningMethodFlow::Run() {
             current_goal_pose_ptr_ -> pose.position.y,
             goal_yaw
         );
+        if (kinodynamic_searcher_ptr_ -> Search(start_state, goal_state)) {
+
+        }
     }
 }
 

@@ -80,18 +80,6 @@ vector
 Eigen/Core
 /home/help/parking_planning_ws/src/planning/include/planning/Eigen/Core
 
-/home/help/parking_planning_ws/src/planning/src/costmap_subscriber.cpp
-planning/costmap_subscriber.h
-/home/help/parking_planning_ws/src/planning/src/planning/costmap_subscriber.h
-
-/home/help/parking_planning_ws/src/planning/src/goal_pose_subscriber.cpp
-planning/goal_pose_subscriber.h
-/home/help/parking_planning_ws/src/planning/src/planning/goal_pose_subscriber.h
-
-/home/help/parking_planning_ws/src/planning/src/init_pose_subscriber.cpp
-planning/init_pose_subscriber.h
-/home/help/parking_planning_ws/src/planning/src/planning/init_pose_subscriber.h
-
 /home/help/parking_planning_ws/src/planning/src/planning_method_flow.cpp
 planning/planning_method_flow.h
 /home/help/parking_planning_ws/src/planning/src/planning/planning_method_flow.h
