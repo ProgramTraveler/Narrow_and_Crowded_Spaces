@@ -98,7 +98,8 @@
 
 * 实现对传入的车辆姿态信息解析
 ```word
-初始姿态使用PoseWithCovarianceStamped 而目标姿态使用PoseStamped 二者都是带有参考系和时间戳的姿态 主要的区别在于PoseWithCovarianceStamped消息类型包含一个协方差矩阵 用于表示姿态的不确定性
+初始姿态使用PoseWithCovarianceStamped 而目标姿态使用PoseStamped 二者都是带有参考系和时间戳的姿态 
+主要的区别在于PoseWithCovarianceStamped消息类型包含一个协方差矩阵 用于表示姿态的不确定性
 ```
 * 安装了 Eigen 但还是报错 No such file or directory -> 因为 eigen 库默认安装在 /usr/include/eigen3/Eigen 需映射到 /usr/include 路径下  
 ```word
@@ -127,7 +128,11 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 ### 2023-05-08
 
 * 设置车辆形状
-* 将状态节点抽象成一个类
+* 抽象化状态节点
 * 创建时间类 方便计算时间差
+
+### 2023-05-09
+
+* 
 
 ---

@@ -240,7 +240,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     state_node_map_[goal_grid_index.x()][goal_grid_index.y()][goal_grid_index.z()] = goal_node_ptr;
 
 
-    return false;
+    
 
 }
 

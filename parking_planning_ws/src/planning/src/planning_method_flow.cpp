@@ -50,12 +50,12 @@ void PlanningMethodFlow::Run() {
         const double map_resolution = 0.2; // 地图分辨率
 
         kinodynamic_searcher_ptr_ -> Init(
-            current_costmap_ptr_ -> info.origin.position.x,
-            1.0 * current_costmap_ptr_ -> info.width * current_costmap_ptr_ -> info.resolution,
-            current_costmap_ptr_ -> info.origin.position.y,
-            1.0 * current_costmap_ptr_ -> info.height * current_costmap_ptr_ -> info.resolution,
-            current_costmap_ptr_ -> info.resolution,
-            map_resolution
+            current_costmap_ptr_ -> info.origin.position.x, // x_lower
+            1.0 * current_costmap_ptr_ -> info.width * current_costmap_ptr_ -> info.resolution, // x_upper
+            current_costmap_ptr_ -> info.origin.position.y, // y_lower
+            1.0 * current_costmap_ptr_ -> info.height * current_costmap_ptr_ -> info.resolution, // y_upper
+            current_costmap_ptr_ -> info.resolution, // state_grid_resolution
+            map_resolution // map_grid_resolution
         );
 
         unsigned int map_w = std::floor(current_costmap_ptr_ -> info.width / map_resolution);
