@@ -136,5 +136,6 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 * 开始编写`混合A*算法部分
 * `混合A*` 初始化
 * 节点搜索部分
+* 启发函数
 
 ---
