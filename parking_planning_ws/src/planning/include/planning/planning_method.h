@@ -127,7 +127,7 @@ private:
     double reversing_penalty_;
     double steering_change_penalty_;
 
-    double path_length = 0.0;
+    double path_length_ = 0.0;
 
     std::shared_ptr<RSPath> rs_path_ptr_;
 
@@ -135,7 +135,7 @@ private:
     MatXd vehicle_shape_discrete_;
 
     double check_collision_use_time = 0.0;
-    int num_chack_collision = 0;
+    int num_check_collision = 0;
     int visited_node_number_ = 0;
 };
 

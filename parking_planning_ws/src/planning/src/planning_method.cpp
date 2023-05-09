@@ -1,5 +1,6 @@
 #include "planning/planning_method.h"
 #include "planning/timer.h"
+#include "ros/ros.h"
 
 PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discrete_num, double segment_length, 
                                 int segment_length_discrete_num, double wheel_base, double steering_penalty,
@@ -181,9 +182,15 @@ void PlanningMethod::SetVehicleShape(double length, double width, double rear_ax
 
 // }
 
-// Vec3i PlanningMethod::State2Index(const Vec3d &state) const {
+Vec3i PlanningMethod::State2Index(const Vec3d &state) const {
+    Vec3i index;
 
-// }
+    index[0] = std::min(std::max(int((state[0] - map_x_lower_) / STATE_GRID_RESOLUTION_), 0), STATE_GRID_SIZE_X_ - 1);
+    index[1] = std::min(std::max(int((state[1] - map_y_lower_) / STATE_GRID_RESOLUTION_), 0), STATE_GRID_SIZE_Y_ - 1);
+    index[2] = std::min(std::max(int((state[2] - (-M_PI)) / ANGULAR_RESOLUTION_), 0), STATE_GRID_SIZE_PHI_ - 1);
+
+    return index;
+}
 
 // Vec2i PlanningMethod::Coordinate2MapGridIndex(const Vec2d &pt) const {
 
@@ -206,13 +213,53 @@ void PlanningMethod::DynamicModel(const double &step_size, const double &phi, do
 
 // }
 
-// double PlanningMethod::ComputeH(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &terminal_node_ptr) {
+double PlanningMethod::ComputeH(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &terminal_node_ptr) {
+    double h;
 
-// }
+    h = (current_node_ptr -> state_.head(2) - terminal_node_ptr -> state_.head(2)).lpNorm<1>();
 
-// double PlanningMethod::ComputeG(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &terminal_node_ptr) const {
+    if (h < 3.0 * shot_distance_) {
+        
+    }
 
-// }
+    return h;
+}
+
+double PlanningMethod::ComputeG(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &neighbor_node_ptr) const {
+    double g;
+
+    if (neighbor_node_ptr -> direction_ == StateNode::FORWARD) {
+        if (neighbor_node_ptr -> steering_grade_ != current_node_ptr -> steering_grade_) {
+             if (neighbor_node_ptr -> steering_grade_ == 0) {
+                g = segment_length_ * steering_change_penalty_;
+             } else {
+                g = segment_length_ * steering_change_penalty_ * steering_penalty_;
+             }
+        } else {
+            if (neighbor_node_ptr -> steering_grade_ == 0) {
+                g = segment_length_;
+            } else {
+                g = segment_length_ * steering_penalty_;
+            }
+        }
+    } else {
+        if (neighbor_node_ptr -> steering_grade_ != current_node_ptr -> steering_grade_) {
+            if (neighbor_node_ptr -> steering_grade_ == 0) {
+                g = segment_length_ * steering_change_penalty_ * reversing_penalty_;
+            } else {
+                g = segment_length_ * steering_change_penalty_ * steering_penalty_ * reversing_penalty_;
+            }
+        } else {
+            if (neighbor_node_ptr -> steering_grade_ == 0) {
+                g = segment_length_ * reversing_penalty_;
+            } else {
+                g = segment_length_ * steering_penalty_ * reversing_penalty_;
+            }
+        }
+    }
+
+    return g;
+}
 
 bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     Timer search_use_time;
@@ -240,7 +287,102 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     state_node_map_[goal_grid_index.x()][goal_grid_index.y()][goal_grid_index.z()] = goal_node_ptr;
 
 
-    
+    openset_.clear();
+
+    openset_.insert(std::make_pair(0, start_node_ptr));
+
+    std::vector<StateNode::Ptr> neighbor_nodes_ptr;
+    StateNode::Ptr current_node_ptr;
+    StateNode::Ptr neighbor_node_ptr;
+
+    int count = 0;
+
+    while (!openset_.empty()) {
+        current_node_ptr = openset_.begin() -> second;
+        current_node_ptr -> node_status_ = StateNode::IN_CLOSESET;
+        openset_.erase(openset_.begin());
+
+        if ((current_node_ptr -> state_.head(2) - goal_node_ptr -> state_.head(2)).norm() <= shot_distance_) {
+            double rs_length = 0.0;
+
+            if (AnalyticExpansions(current_node_ptr, goal_node_ptr, rs_length)) {
+                terminal_node_ptr_ = goal_node_ptr;
+
+                StateNode::Ptr grid_node_ptr = terminal_node_ptr_ -> parent_node_;
+
+                while (grid_node_ptr != nullptr) {
+                    grid_node_ptr = grid_node_ptr -> parent_node_;
+                    path_length_ = path_length_ + segment_length_;
+                }
+                path_length_ = path_length_ - segment_length_ + rs_length;
+
+                std::cout << "ComputH use time(ms)" << compute_h_time << std::endl;
+                std::cout << "check collision use time(ms)" << check_collision_use_time << std::endl;
+                std::cout << "GetNeighborNodes use time(ms)" << neighbor_time << std::endl;
+                std::cout << "average time of check collision(ms)" << check_collision_use_time / num_check_collision << std::endl;
+
+                ROS_INFO("\033[1;32m --> Time in Method is %f ms, path length: %f \033[0m\n", search_use_time.End(), path_length_);
+
+                check_collision_use_time = 0.0;
+                num_check_collision = 0.0;
+
+                return true;
+            }
+        }
+
+        Timer timer_get_neighbor;
+        GetNeighborNodes(current_node_ptr, neighbor_nodes_ptr);
+        neighbor_time = neighbor_time + timer_get_neighbor.End();
+
+        for (unsigned int i = 0; i < neighbor_nodes_ptr.size(); i ++) {
+            neighbor_node_ptr = neighbor_nodes_ptr[i];
+
+            Timer timer_compute_g;
+            const double neighbor_edge_cost = ComputeG(current_node_ptr, neighbor_node_ptr);
+            compute_g_time = compute_g_time + timer_get_neighbor.End();
+
+            Timer timer_compute_h;
+            const double current_h = ComputeH(current_node_ptr, goal_node_ptr) * tie_breaker_;
+            compute_h_time = compute_h_time + timer_get_neighbor.End();
+
+            const Vec3i &index = neighbor_node_ptr -> grid_index_;
+            if (state_node_map_[index.x()][index.y()][index.z()] == nullptr) {
+                neighbor_node_ptr -> g_cost_ = current_node_ptr -> g_cost_ + neighbor_edge_cost;
+                neighbor_node_ptr -> parent_node_ = current_node_ptr;
+                neighbor_node_ptr -> node_status_ = StateNode::IN_OPENSET;
+                neighbor_node_ptr -> f_cost_ = neighbor_node_ptr -> g_cost_ + current_h;
+                openset_.insert(std::make_pair(neighbor_node_ptr -> f_cost_, neighbor_node_ptr));
+                state_node_map_[index.x()][index.y()][index.z()] = neighbor_node_ptr;
+                continue;
+            } else if (state_node_map_[index.x()][index.y()][index.z()] -> node_status_ == StateNode::IN_OPENSET) {
+                double g_cost_temp = current_node_ptr -> g_cost_ + neighbor_edge_cost;
+
+                if (state_node_map_[index.x()][index.y()][index.z()] -> g_cost_ > g_cost_temp) {
+                    neighbor_node_ptr -> g_cost_ = g_cost_temp;
+                    neighbor_node_ptr -> f_cost_ = g_cost_temp + current_h;
+                    neighbor_node_ptr -> parent_node_ = current_node_ptr;
+                    neighbor_node_ptr -> node_status_ = StateNode::IN_OPENSET;
+
+                    state_node_map_[index.x()][index.y()][index.z()] = neighbor_node_ptr;
+                } else {
+                    delete neighbor_node_ptr;
+                }
+                continue;
+            } else if (state_node_map_[index.x()][index.y()][index.z()] -> node_status_ == StateNode::IN_CLOSESET) {
+                delete neighbor_node_ptr;
+                continue;
+            }
+        }
+
+        count ++;
+        if (count > 50000) {
+            ROS_WARN("Exceeded the number of iterations, the search failed");
+
+            return false;
+        }
+    }
+
+    return false;
 
 }
 
@@ -264,6 +406,7 @@ void PlanningMethod::Reset() {
 
 }
 
-// bool PlanningMethod::AnalyticExpansions(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &goal_node_ptr, double &length) {
+bool PlanningMethod::AnalyticExpansions(const StateNode::Ptr &current_node_ptr, const StateNode::Ptr &goal_node_ptr, double &length) {
 
-// }
+    return true;
+}
