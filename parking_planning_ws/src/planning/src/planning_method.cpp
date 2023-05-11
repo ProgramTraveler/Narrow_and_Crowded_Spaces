@@ -1,6 +1,7 @@
 #include "planning/planning_method.h"
 #include "planning/timer.h"
 #include "ros/ros.h"
+#include "planning/rs_path.h"
 
 PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discrete_num, double segment_length, 
                                 int segment_length_discrete_num, double wheel_base, double steering_penalty,
@@ -26,7 +27,15 @@ PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discret
     reversing_penalty_ = reversing_penalty;
     shot_distance_ = shot_distance;
 
-    
+    // CHECK_EQ(static_cast<float>(segment_length_discrete_num_ * move_step_size_), static_cast<float>(segment_length_))
+    //     << "The segment length must be divisible by the step size. segment_length: "
+    //     << segment_length_ << "| step_size: " << move_step_size_;
+
+    rs_path_ptr_ = std::make_shared<RSPath>(wheel_base_ / std::tan(steering_radian_));
+    tie_breaker_ = 1.0 + 1e-3;
+
+    STATE_GRID_SIZE_PHI_ = grid_size_phi;
+    ANGULAR_RESOLUTION_ = 360.0 / STATE_GRID_SIZE_PHI_ * M_PI / 180.0;
 }
 
 PlanningMethod::~PlanningMethod() {
@@ -37,7 +46,7 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
                     double state_grid_resolution, double map_grid_resolution) {
     SetVehicleShape(4.7, 2.0, 1.3);
 
-    map_x_lower_ = x_lower;
+    map_x_lower_ = x_lower; // 
     map_x_upper_ = x_upper;
     map_y_lower_ = y_lower;
     map_y_upper_ = y_upper;
@@ -275,7 +284,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     goal_node_ptr -> steering_grade_ = 0;
 
     auto start_node_ptr = new StateNode(start_grid_index);
-    start_node_ptr -> state_ = goal_state;
+    start_node_ptr -> state_ = start_state;
     start_node_ptr -> steering_grade_ = 0;
     start_node_ptr -> direction_ = StateNode::NO;
     start_node_ptr -> node_status_ = StateNode::IN_OPENSET;
@@ -398,9 +407,26 @@ void PlanningMethod::ReleaseMemory() {
 
 // }
 
-// VectorVec3d PlanningMethod::GetPath() const {
+VectorVec3d PlanningMethod::GetPath() const {
+    VectorVec3d path;
 
-// }
+    std::vector<StateNode::Ptr> temp_nodes;
+
+    StateNode::Ptr state_grid_node_ptr = terminal_node_ptr_;
+
+    while (state_grid_node_ptr != nullptr) {
+        temp_nodes.emplace_back(state_grid_node_ptr);
+        state_grid_node_ptr = state_grid_node_ptr -> parent_node_;
+    }
+
+    std::reverse(temp_nodes.begin(), temp_nodes.end());
+    
+    for (const auto &node : temp_nodes) {
+        path.insert(path.end(), node -> intermediate_states_.begin(), node -> intermediate_states_.end());
+    }
+
+    return path;
+} 
 
 void PlanningMethod::Reset() {
 

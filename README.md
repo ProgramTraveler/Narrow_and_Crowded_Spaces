@@ -140,6 +140,7 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 
 ### 2023-05-11
 
-* 继续`混合A*`算法
+* 继续`混合A*`算法部分
+* debug
 
 ---

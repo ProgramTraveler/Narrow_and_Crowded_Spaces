@@ -20,7 +20,8 @@ struct StateNode {
     StateNode() = delete;
 
     explicit StateNode(const Vec3i &grid_index) {
-        node_status_ = NOT_VISITED;        parent_node_ = nullptr;
+        node_status_ = NOT_VISITED;        
+        parent_node_ = nullptr;
     }
 
     void Reset() {
