@@ -129,6 +129,9 @@ add_library(head_src
   include/${PROJECT_NAME}/type.h
   include/${PROJECT_NAME}/state_node.h
   include/${PROJECT_NAME}/timer.h
+  include/${PROJECT_NAME}/display_tool.h
+  include/${PROJECT_NAME}/trajectory_optimizer.h
+
   
   include/${PROJECT_NAME}/init_pose_subscriber.h
   src/init_pose_subscriber.cpp

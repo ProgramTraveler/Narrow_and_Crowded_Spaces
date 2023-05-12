@@ -6,6 +6,17 @@
 #include "tf/transform_datatypes.h"
 #include "tf/transform_broadcaster.h"
 
+double Mod2Pi(const double &x) {
+    double v = fmod(x, 2 * M_PI);
+
+    if (v < -M_PI) {
+        v += 2.0 * M_PI;
+    } else if (v > M_PI) {
+        v -= 2.0 * M_PI;
+    }
+
+    return v;
+}
 
 PlanningMethodFlow::PlanningMethodFlow(ros::NodeHandle &nh) { // 初始化
     double steering_angle = nh.param("planner/steering_angle", 10); // 转向角
@@ -35,6 +46,10 @@ PlanningMethodFlow::PlanningMethodFlow(ros::NodeHandle &nh) { // 初始化
 
     goal_pose_sub_ptr_ = std::make_shared<GoalPoseSubscriber2D>(nh, "/move_base_simple/goal", 1);
 
+    path_pub_ = nh.advertise<nav_msgs::Path>("searched_path", 1);
+    searched_tree_pub_ = nh.advertise<visualization_msgs::Marker>("searched_tree", 1);
+    vehicle_path_pub_ = nh.advertise<visualization_msgs::MarkerArray>("vehicle_path", 1);
+
     has_map_ = false;
 }
 
@@ -50,11 +65,11 @@ void PlanningMethodFlow::Run() {
         const double map_resolution = 0.2; // 地图分辨率
 
         kinodynamic_searcher_ptr_ -> Init(
-            current_costmap_ptr_ -> info.origin.position.x, // x_lower
+            current_costmap_ptr_ -> info.origin.position.x, // x_lower [cell]
             1.0 * current_costmap_ptr_ -> info.width * current_costmap_ptr_ -> info.resolution, // x_upper
-            current_costmap_ptr_ -> info.origin.position.y, // y_lower
+            current_costmap_ptr_ -> info.origin.position.y, // y_lower [cell]
             1.0 * current_costmap_ptr_ -> info.height * current_costmap_ptr_ -> info.resolution, // y_upper
-            current_costmap_ptr_ -> info.resolution, // state_grid_resolution
+            current_costmap_ptr_ -> info.resolution, // state_grid_resolution [m / cell]
             map_resolution // map_grid_resolution
         );
 
@@ -97,12 +112,16 @@ void PlanningMethodFlow::Run() {
             current_goal_pose_ptr_ -> pose.position.y,
             goal_yaw
         );
+
+        std::cout << (kinodynamic_searcher_ptr_ -> Search(start_state, goal_state)) << std::endl;
+
         if (kinodynamic_searcher_ptr_ -> Search(start_state, goal_state)) {
+
             auto path = kinodynamic_searcher_ptr_ -> GetPath();
 
-            // PublishPath(path);
-            // PublishVechicle(path, 4.0, 2.0, 5u);
-            // PublishSearchedTree(kinodynamic_searcher_ptr_ -> GetSearchedTree());
+            PublishPath(path);
+            PublishVehiclePath(path, 4.0, 2.0, 5u);
+            PublishSearchedTree(kinodynamic_searcher_ptr_ -> GetSearchedTree());
 
             nav_msgs::Path path_ros;
             geometry_msgs::PoseStamped pose_stamped;
@@ -164,4 +183,94 @@ bool PlanningMethodFlow::HasStartPose() {
 
 bool PlanningMethodFlow::HasGoalPose() {
     return !goal_pose_deque_.empty();
+}
+
+void PlanningMethodFlow::PublishPath(const VectorVec3d &path) {
+    nav_msgs::Path nav_path;
+
+    geometry_msgs::PoseStamped pose_stamped;
+    for (const auto &pose: path) {
+        pose_stamped.header.frame_id = "world";
+        pose_stamped.pose.position.x = pose.x();
+        pose_stamped.pose.position.y = pose.y();
+        pose_stamped.pose.position.z = 0.0;
+        pose_stamped.pose.orientation = tf::createQuaternionMsgFromYaw(pose.z());
+
+        nav_path.poses.emplace_back(pose_stamped);
+    }
+
+    nav_path.header.frame_id = "world";
+    nav_path.header.stamp = timestamp_;
+
+    path_pub_.publish(nav_path);
+}
+
+void PlanningMethodFlow::PublishVehiclePath(const VectorVec3d &path, double width,
+                                         double length, unsigned int vehicle_interval = 5u) {
+    visualization_msgs::MarkerArray vehicle_array;
+
+    for (unsigned int i = 0; i < path.size(); i += vehicle_interval) {
+        visualization_msgs::Marker vehicle;
+
+        if (i == 0) {
+            vehicle.action = 3;
+        }
+
+        vehicle.header.frame_id = "world";
+        vehicle.header.stamp = ros::Time::now();
+        vehicle.type = visualization_msgs::Marker::CUBE;
+        vehicle.id = static_cast<int>(i / vehicle_interval);
+        vehicle.scale.x = width;
+        vehicle.scale.y = length;
+        vehicle.scale.z = 0.01;
+        vehicle.color.a = 0.1;
+
+        vehicle.color.r = 1.0;
+        vehicle.color.b = 0.0;
+        vehicle.color.g = 0.0;
+
+        vehicle.pose.position.x = path[i].x();
+        vehicle.pose.position.y = path[i].y();
+        vehicle.pose.position.z = 0.0;
+
+        vehicle.pose.orientation = tf::createQuaternionMsgFromYaw(path[i].z());
+        vehicle_array.markers.emplace_back(vehicle);
+    }
+
+    vehicle_path_pub_.publish(vehicle_array);
+}
+
+void PlanningMethodFlow::PublishSearchedTree(const VectorVec4d &searched_tree) {
+    visualization_msgs::Marker tree_list;
+    tree_list.header.frame_id = "world";
+    tree_list.header.stamp = ros::Time::now();
+    tree_list.type = visualization_msgs::Marker::LINE_LIST;
+    tree_list.action = visualization_msgs::Marker::ADD;
+    tree_list.ns = "searched_tree";
+    tree_list.scale.x = 0.02;
+
+    tree_list.color.a = 1.0;
+    tree_list.color.r = 0;
+    tree_list.color.g = 0;
+    tree_list.color.b = 0;
+
+    tree_list.pose.orientation.w = 1.0;
+    tree_list.pose.orientation.x = 0.0;
+    tree_list.pose.orientation.y = 0.0;
+    tree_list.pose.orientation.z = 0.0;
+
+    geometry_msgs::Point point;
+    for (const auto &i: searched_tree) {
+        point.x = i.x();
+        point.y = i.y();
+        point.z = 0.0;
+        tree_list.points.emplace_back(point);
+
+        point.x = i.z();
+        point.y = i.w();
+        point.z = 0.0;
+        tree_list.points.emplace_back(point);
+    }
+
+    searched_tree_pub_.publish(tree_list);
 }

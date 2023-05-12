@@ -31,7 +31,7 @@ private:
 
     void PublishSearchedTree(const VectorVec4d &searched_tree);
 
-    void PublishVechicle(const VectorVec3d &path, double width, double length, unsigned int vehicle_interval);
+    void PublishVehiclePath(const VectorVec3d &path, double width, double length, unsigned int vehicle_interval);
 
 private:
     std::shared_ptr<InitPoseSubscriber2D> init_pose_sub_ptr_;

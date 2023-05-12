@@ -146,6 +146,8 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 
 ### 2023-05-12
 
-* 
+* 测试程序
+* debug
+* 生成的路径发布失败(显示失败)
 
 ---
