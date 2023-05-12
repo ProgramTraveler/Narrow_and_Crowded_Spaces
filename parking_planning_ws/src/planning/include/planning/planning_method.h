@@ -5,7 +5,7 @@
 #include "memory"
 #include "planning/state_node.h"
 #include "planning/rs_path.h"
-
+#include "glog/logging.h"
 
 class PlanningMethod {
 public: 

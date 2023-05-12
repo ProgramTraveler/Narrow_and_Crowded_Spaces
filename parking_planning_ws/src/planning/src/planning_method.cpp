@@ -228,7 +228,10 @@ double PlanningMethod::ComputeH(const StateNode::Ptr &current_node_ptr, const St
     h = (current_node_ptr -> state_.head(2) - terminal_node_ptr -> state_.head(2)).lpNorm<1>();
 
     if (h < 3.0 * shot_distance_) {
-        
+        h = rs_path_ptr_ -> Distance(current_node_ptr -> state_.x(), current_node_ptr -> state_.y(),
+                                    current_node_ptr -> state_.z(),
+                                    terminal_node_ptr -> state_.x(), terminal_node_ptr -> state_.y(),
+                                    terminal_node_ptr -> state_.z());
     }
 
     return h;
@@ -395,17 +398,47 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
 
 }
 
-// VectorVec4d PlanningMethod::GetSearchedTree() {
+VectorVec4d PlanningMethod::GetSearchedTree() {
+    VectorVec4d tree;
+    Vec4d point_pair;
 
-// }
+    visited_node_number_ = 0;
+
+    for (int i = 0; i < STATE_GRID_SIZE_X_; i ++) {
+        for (int j = 0; j < STATE_GRID_SIZE_Y_; j ++) {
+            for (int k = 0; k < STATE_GRID_SIZE_PHI_; k ++) {
+                if (state_node_map_[i][j][k] == nullptr || state_node_map_[i][j][k] -> parent_node_ == nullptr) {
+                    continue;
+                }
+
+                const unsigned int number_states = state_node_map_[i][j][k] -> intermediate_states_.size() - 1;
+
+                for (unsigned int l = 0; l < number_states; l ++) {
+                    point_pair.head(2) = state_node_map_[i][j][k] -> intermediate_states_[l].head(2);   
+                    point_pair.head(2) = state_node_map_[i][j][k] -> intermediate_states_[l + 1].head(2);
+
+                    tree.emplace_back(point_pair);
+                }
+
+                point_pair.head(2) = state_node_map_[i][j][k] -> intermediate_states_[0].head(2);
+                point_pair.tail(2) = state_node_map_[i][j][k] -> parent_node_ -> state_.head(2);
+                tree.emplace_back(point_pair);
+
+                visited_node_number_ ++;
+            } 
+        }
+    }
+
+    return tree;
+}
 
 void PlanningMethod::ReleaseMemory() {
 
 }
 
-// __attribute__((unused)) double PlanningMethod::GetPathLength() const {
-
-// }
+__attribute__((unused)) double PlanningMethod::GetPathLength() const {
+    return path_length_;
+}
 
 VectorVec3d PlanningMethod::GetPath() const {
     VectorVec3d path;
