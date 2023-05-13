@@ -1,18 +1,14 @@
 #ifndef PLANNING_PLANNING_METHOD_FLOW_H
 #define PLANNING_PLANNING_METHOD_FLOW_H
 
-#include "ros/ros.h"
+#include "planning_method.h"
+#include "costmap_subscriber.h"
+#include "init_pose_subscriber.h"
+#include "goal_pose_subscriber.h"
 
-#include "planning/planning_method.h"
-#include "planning/costmap_subscriber.h"
-#include "planning/init_pose_subscriber.h"
-#include "planning/goal_pose_subscriber.h"
-#include "planning/type.h"
-
-#include "nav_msgs/OccupancyGrid.h"
+#include <ros/ros.h>
 
 class PlanningMethodFlow {
-
 public:
     PlanningMethodFlow() = default; // 生成默认的构造函数
 
@@ -22,27 +18,30 @@ public:
 
 private:
     void InitPoseData();
+
     void ReadData();
 
     bool HasStartPose();
+
     bool HasGoalPose();
 
     void PublishPath(const VectorVec3d &path);
 
     void PublishSearchedTree(const VectorVec4d &searched_tree);
 
-    void PublishVehiclePath(const VectorVec3d &path, double width, double length, unsigned int vehicle_interval);
+    void PublishVehiclePath(const VectorVec3d &path, double width,
+                            double length, unsigned int vehicle_interval);
 
 private:
-    std::shared_ptr<InitPoseSubscriber2D> init_pose_sub_ptr_;
-    std::shared_ptr<GoalPoseSubscriber2D> goal_pose_sub_ptr_;
     std::shared_ptr<PlanningMethod> kinodynamic_searcher_ptr_;
     std::shared_ptr<CostMapSubscriber> costmap_sub_ptr_;
+    std::shared_ptr<InitPoseSubscriber2D> init_pose_sub_ptr_;
+    std::shared_ptr<GoalPoseSubscriber2D> goal_pose_sub_ptr_;
 
     ros::Publisher path_pub_;
     ros::Publisher searched_tree_pub_;
     ros::Publisher vehicle_path_pub_;
- 
+
     std::deque<geometry_msgs::PoseWithCovarianceStampedPtr> init_pose_deque_;
     std::deque<geometry_msgs::PoseStampedPtr> goal_pose_deque_;
     /* 

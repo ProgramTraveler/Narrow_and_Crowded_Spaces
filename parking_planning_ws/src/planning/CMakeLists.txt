@@ -1,12 +1,37 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(planning)
 
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+
+if (COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+elseif (COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+else ()
+    message(FATAL_ERROR "The compiler ${CMAKE_CXX_FLAGS} doesn't have C++11 support.
+                         Please use a different C++ compiler")
+endif ()
+
+set(ADDITIONAL_CXX_FLAG "-Wall -O3 -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADDITIONAL_CXX_FLAG}")
+
+# Eigen
+include(cmake/FindEigen.cmake)
+include_directories(${EIGEN_INCLUDE_DIR})
+
+# glog
+include(cmake/glog.cmake)
+include_directories(${GLOG_INCLUDE_DIRS})
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+# catkin
 find_package(catkin REQUIRED COMPONENTS
   map_server
   roscpp
@@ -129,7 +154,7 @@ add_library(head_src
   include/${PROJECT_NAME}/type.h
   include/${PROJECT_NAME}/state_node.h
   include/${PROJECT_NAME}/timer.h
-  include/${PROJECT_NAME}/display_tool.h
+  include/${PROJECT_NAME}/display_tools.h
   include/${PROJECT_NAME}/trajectory_optimizer.h
 
   
@@ -184,6 +209,7 @@ add_dependencies(run_planning ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPOR
 # )
 target_link_libraries(head_src
   ${catkin_LIBRARIES}
+  ${GLOG_LIBRARIES}
 )
 target_link_libraries(run_planning
   head_src

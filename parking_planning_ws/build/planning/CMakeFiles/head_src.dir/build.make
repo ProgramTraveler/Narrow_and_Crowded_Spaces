@@ -177,6 +177,7 @@ head_src_EXTERNAL_OBJECTS =
 /home/help/parking_planning_ws/devel/lib/libhead_src.so: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
 /home/help/parking_planning_ws/devel/lib/libhead_src.so: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
 /home/help/parking_planning_ws/devel/lib/libhead_src.so: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
+/home/help/parking_planning_ws/devel/lib/libhead_src.so: /usr/lib/x86_64-linux-gnu/libglog.so
 /home/help/parking_planning_ws/devel/lib/libhead_src.so: planning/CMakeFiles/head_src.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/help/parking_planning_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX shared library /home/help/parking_planning_ws/devel/lib/libhead_src.so"
 	cd /home/help/parking_planning_ws/build/planning && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/head_src.dir/link.txt --verbose=$(VERBOSE)

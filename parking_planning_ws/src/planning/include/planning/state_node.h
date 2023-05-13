@@ -1,16 +1,16 @@
 #ifndef PLANNING_STATE_NODE_H
 #define PLANNING_STATE_NODE_H
 
-#include "Eigen/Dense"
-#include "planning/type.h"
+#include "type.h"
+
+#include <Eigen/Dense>
 
 struct StateNode {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     // enum -> 用于定义枚举类型
-
     enum NODE_STATUS { // 定义节点状态
-        NOT_VISITED = 0, IN_OPENSET = 1, IN_CLOSESET = 2 
+        NOT_VISITED = 0, IN_OPENSET = 1, IN_CLOSESET = 2
     };
 
     enum DIRECTION { // 运动方向
@@ -20,7 +20,8 @@ struct StateNode {
     StateNode() = delete;
 
     explicit StateNode(const Vec3i &grid_index) {
-        node_status_ = NOT_VISITED;        
+        node_status_ = NOT_VISITED;
+        grid_index_ = grid_index;
         parent_node_ = nullptr;
     }
 
@@ -30,7 +31,6 @@ struct StateNode {
     }
 
     NODE_STATUS node_status_;
-
     DIRECTION direction_{};
 
     Vec3d state_;

@@ -1,11 +1,11 @@
 #ifndef PLANNING_GOAL_POSE_SUBSCRIBER_H
 #define PLANNING_GOAL_POSE_SUBSCRIBER_H
 
-#include "geometry_msgs/PoseStamped.h" //  A Pose with reference coordinate frame and timestamp
-#include "ros/ros.h"
+#include <ros/ros.h>
+#include <geometry_msgs/PoseStamped.h> // A Pose with reference coordinate frame and timestamp
 
-#include "deque"
-#include "mutex"
+#include <deque>
+#include <mutex>
 
 class GoalPoseSubscriber2D {
 public:
@@ -18,10 +18,9 @@ private:
 
 private:
     ros::Subscriber subscriber_;
-    std::deque<geometry_msgs::PoseStampedPtr> goal_pose_;
+    std::deque<geometry_msgs::PoseStampedPtr> goal_poses_;
 
     std::mutex buff_mutex_;
-
 };
 
 #endif

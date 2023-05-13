@@ -1,12 +1,13 @@
 #ifndef PLANNING_TYPE_H
-#define PALNNING_TYPE_H
+#define PLANNING_TYPE_H
+
+#include <vector>
+#include <Eigen/Core>
 
 // 一些模板
 
-#include "vector"
-#include "Eigen/Core"
-
 template<int dim>
+
 // 定义一个新的类型别名
 using TypeVectorVecd = typename std::vector<Eigen::Matrix<double, dim, 1>, // 元素类型
         Eigen::aligned_allocator<Eigen::Matrix<double, dim, 1>>>;
