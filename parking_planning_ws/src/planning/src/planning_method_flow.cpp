@@ -62,29 +62,35 @@ void PlanningMethodFlow::Run() {
         current_costmap_ptr_ = costmap_deque_.front();
         costmap_deque_.pop_front();
 
-        const double map_resolution = 0.2; // 地图分辨率
+        const double map_resolution = 0.2;
+
         kinodynamic_searcher_ptr_ -> Init(
+                /*
+                    info.origin.position.x
+                        表示地图原点在实际世界中的位置 这是地图中单元格(0, 0)的实际世界姿态
+                */
                 current_costmap_ptr_ -> info.origin.position.x, // x_lower [m]
-                1.0 * current_costmap_ptr_ -> info.width * current_costmap_ptr_ -> info.resolution, // x_upper[m]
+                1.0 * current_costmap_ptr_ -> info.width * current_costmap_ptr_ -> info.resolution, // x_upper [m]
                 current_costmap_ptr_ -> info.origin.position.y, // y_lower [m]
-                1.0 * current_costmap_ptr_ -> info.height * current_costmap_ptr_ -> info.resolution, // y_upper[m]
+                1.0 * current_costmap_ptr_ -> info.height * current_costmap_ptr_ -> info.resolution, // y_upper [m]
                 current_costmap_ptr_ -> info.resolution, // state_grid_resolution [m / cell]
                 map_resolution // map_grid_resolution
         );
 
-        unsigned int map_w = std::floor(current_costmap_ptr_ -> info.width / map_resolution); // 地图宽度 [m]
-        unsigned int map_h = std::floor(current_costmap_ptr_ -> info.height / map_resolution); // 地图高度 [m]
+        unsigned int map_w = std::floor(current_costmap_ptr_ -> info.width / map_resolution); 
+        unsigned int map_h = std::floor(current_costmap_ptr_ -> info.height / map_resolution);
         
         for (unsigned int w = 0; w < map_w; ++ w) {
             for (unsigned int h = 0; h < map_h; ++ h) {
-                // 
+                // x -> [0, current_costmap_ptr -> width]
                 auto x = static_cast<unsigned int> ((w + 0.5) * map_resolution
                                                     / current_costmap_ptr_ -> info.resolution);
+                // y -> [0, current_costmap_ptr -> heitght]
                 auto y = static_cast<unsigned int> ((h + 0.5) * map_resolution
                                                     / current_costmap_ptr_ -> info.resolution);
 
                 /*
-                    nav_msgs/OccupancyGrid 是 ROS（机器人操作系统）中的一种消息类型，用于表示占用栅格地图
+                    nav_msgs/OccupancyGrid 是 ROS(机器人操作系统)中的一种消息类型，用于表示占用栅格地图
                         它包含了一个 data 字段 用于存储地图中每个单元格的占用状态
 
                     data 字段是一个一维整数数组 其长度等于地图的宽度乘以高度
@@ -94,6 +100,7 @@ void PlanningMethodFlow::Run() {
                     数组中的元素按行优先顺序排列 即第一行的所有元素排在最前面 然后是第二行的所有元素 依此类推
                         因此 可以通过以下公式计算地图中给定坐标 (x,y) 对应的数组索引 index = y * width + x 其中 width 是地图的宽度
                 */
+
                 if (current_costmap_ptr_ -> data[y * current_costmap_ptr_ -> info.width + x]) {
                     kinodynamic_searcher_ptr_ -> SetObstacle(w, h);
                 }
@@ -199,6 +206,7 @@ void PlanningMethodFlow::PublishPath(const VectorVec3d &path) {
     nav_msgs::Path nav_path;
 
     geometry_msgs::PoseStamped pose_stamped;
+
     for (const auto &pose: path) {
         pose_stamped.header.frame_id = "world";
         pose_stamped.pose.position.x = pose.x();

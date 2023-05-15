@@ -2,7 +2,6 @@
 #include "planning/planning_method.h"
 #include "planning/display_tools.h"
 #include "planning/timer.h"
-#include "planning/trajectory_optimizer.h"
 
 #include <iostream>
 
@@ -47,7 +46,7 @@ PlanningMethod::~PlanningMethod() {
 void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double y_upper,
                        double state_grid_resolution, double map_grid_resolution) {
     SetVehicleShape(4.7, 2.0, 1.3);
-
+    
     // [m]
     map_x_lower_ = x_lower; // 地图 x 轴的最小值
     map_x_upper_ = x_upper; // 地图 x 轴的最大值
@@ -55,7 +54,7 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
     map_y_upper_ = y_upper; // 地图 y 轴的最大值
 
     STATE_GRID_RESOLUTION_ = state_grid_resolution; // current_costmap_ptr_ -> info.resolution
-    MAP_GRID_RESOLUTION_ = map_grid_resolution; // 设定的地图分辨率
+    MAP_GRID_RESOLUTION_ = map_grid_resolution;
 
     STATE_GRID_SIZE_X_ = std::floor((map_x_upper_ - map_x_lower_) / STATE_GRID_RESOLUTION_);
     STATE_GRID_SIZE_Y_ = std::floor((map_y_upper_ - map_y_lower_) / STATE_GRID_RESOLUTION_);
@@ -111,8 +110,15 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
 }
 
 inline bool PlanningMethod::LineCheck(double x0, double y0, double x1, double y1) {
+    /*
+        使用 Bresenham 算法检查 点(x0, y0) 到 (x1, y1) 的直线路径上是否存在障碍物或是否超出边界
+    */
+    
+    // 确定直线斜率
+    // abs(y1 - y0) > std::abs(x1 - x0) 斜率 > 1
     bool steep = (std::abs(y1 - y0) > std::abs(x1 - x0));
 
+    // 根据斜率的绝对值与 1 的关系来决定是否交换坐标
     if (steep) {
         std::swap(x0, y0);
         std::swap(y1, x1);
@@ -123,13 +129,15 @@ inline bool PlanningMethod::LineCheck(double x0, double y0, double x1, double y1
         std::swap(y0, y1);
     }
 
+    // 计算增量
     auto delta_x = x1 - x0;
     auto delta_y = std::abs(y1 - y0);
     auto delta_error = delta_y / delta_x;
-    decltype(delta_x) error = 0;
-    decltype(delta_x) y_step;
+    decltype(delta_x) error = 0; //
+    decltype(delta_x) y_step; // 
     auto yk = y0;
 
+    // 确定步长
     if (y0 < y1) {
         y_step = 1;
     } else {
@@ -137,7 +145,10 @@ inline bool PlanningMethod::LineCheck(double x0, double y0, double x1, double y1
     }
 
     auto N = static_cast<unsigned int>(x1 - x0);
+
+    // 遍历直线路径上的每个像素点
     for (unsigned int i = 0; i < N; ++i) {
+        // 检查像素点是否存在障碍物或者是否超出边界
         if (steep) {
             if (HasObstacle(Vec2i(yk, x0 + i * 1.0))
                 || BeyondBoundary(Vec2d(yk * MAP_GRID_RESOLUTION_,
@@ -172,6 +183,7 @@ bool PlanningMethod::CheckCollision(const double &x, const double &y, const doub
 
     MatXd transformed_vehicle_shape;
     transformed_vehicle_shape.resize(8, 1);
+
     for (unsigned int i = 0; i < 4u; ++i) {
         transformed_vehicle_shape.block<2, 1>(i * 2, 0)
                 = R * vehicle_shape_.block<2, 1>(i * 2, 0) + Vec2d(x, y);
@@ -180,6 +192,7 @@ bool PlanningMethod::CheckCollision(const double &x, const double &y, const doub
     Vec2i transformed_pt_index_0 = Coordinate2MapGridIndex(
             transformed_vehicle_shape.block<2, 1>(0, 0)
     );
+
     Vec2i transformed_pt_index_1 = Coordinate2MapGridIndex(
             transformed_vehicle_shape.block<2, 1>(2, 0)
     );
@@ -235,6 +248,7 @@ bool PlanningMethod::CheckCollision(const double &x, const double &y, const doub
 
     check_collision_use_time += timer.End();
     num_check_collision++;
+
     return true;
 }
 
@@ -303,11 +317,13 @@ void PlanningMethod::SetVehicleShape(double length, double width, double rear_ax
     const auto N_length = static_cast<unsigned int>(length / step_size);
     const auto N_width = static_cast<unsigned int> (width / step_size);
 
-    vehicle_shape_discrete_.resize(2, (N_length + N_width) * 2u); // 2u -> 值为 2 的无符号整数
+    // 2u -> 值为 2 的无符号整数
+    vehicle_shape_discrete_.resize(2, (N_length + N_width) * 2u);
 
     const Vec2d edge_0_normalized = (vehicle_shape_.block<2, 1>(2, 0)
                                      - vehicle_shape_.block<2, 1>(0, 0)).normalized(); // 计算单位向量
-    for (unsigned int i = 0; i < N_length; ++i) {
+
+    for (unsigned int i = 0; i < N_length; ++i) { // 
         vehicle_shape_discrete_.block<2, 1>(0, i + N_length)
                 = vehicle_shape_.block<2, 1>(4, 0) - edge_0_normalized * i * step_size;
         vehicle_shape_discrete_.block<2, 1>(0, i)
@@ -316,7 +332,8 @@ void PlanningMethod::SetVehicleShape(double length, double width, double rear_ax
 
     const Vec2d edge_1_normalized = (vehicle_shape_.block<2, 1>(4, 0)
                                      - vehicle_shape_.block<2, 1>(2, 0)).normalized();
-    for (unsigned int i = 0; i < N_width; ++i) {
+
+    for (unsigned int i = 0; i < N_width; ++i) { // 
         vehicle_shape_discrete_.block<2, 1>(0, (2 * N_length) + i)
                 = vehicle_shape_.block<2, 1>(2, 0) + edge_1_normalized * i * step_size;
         vehicle_shape_discrete_.block<2, 1>(0, (2 * N_length) + i + N_width)
@@ -338,7 +355,7 @@ Vec2d PlanningMethod::MapGridIndex2Coordinate(const Vec2i &grid_index) const {
 
 Vec3i PlanningMethod::State2Index(const Vec3d &state) const {
     Vec3i index;
-
+    // 保证坐标是合理的 [cell]
     index[0] = std::min(std::max(int((state[0] - map_x_lower_) / STATE_GRID_RESOLUTION_), 0), STATE_GRID_SIZE_X_ - 1);
     index[1] = std::min(std::max(int((state[1] - map_y_lower_) / STATE_GRID_RESOLUTION_), 0), STATE_GRID_SIZE_Y_ - 1);
     index[2] = std::min(std::max(int((state[2] - (-M_PI)) / ANGULAR_RESOLUTION_), 0), STATE_GRID_SIZE_PHI_ - 1);
@@ -351,6 +368,7 @@ Vec2i PlanningMethod::Coordinate2MapGridIndex(const Vec2d &pt) const {
 
     grid_index[0] = int((pt[0] - map_x_lower_) / MAP_GRID_RESOLUTION_);
     grid_index[1] = int((pt[1] - map_y_lower_) / MAP_GRID_RESOLUTION_);
+
     return grid_index;
 }
 
@@ -358,7 +376,7 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
                                    std::vector<StateNode::Ptr> &neighbor_nodes) {
     neighbor_nodes.clear();
 
-    for (int i = -steering_discrete_num_; i <= steering_discrete_num_; ++i) {
+    for (int i = -steering_discrete_num_; i <= steering_discrete_num_; ++ i) {
         VectorVec3d intermediate_state;
         bool has_obstacle = false;
 
@@ -380,7 +398,7 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
         }
 
         Vec3i grid_index = State2Index(intermediate_state.back());
-        if (!BeyondBoundary(intermediate_state.back().head(2)) && !has_obstacle) {
+        if (!BeyondBoundary(intermediate_state.back().head(2)) && !has_obstacle) { // 
             auto neighbor_forward_node_ptr = new StateNode(grid_index);
             neighbor_forward_node_ptr -> intermediate_states_ = intermediate_state;
             neighbor_forward_node_ptr -> state_ = intermediate_state.back();
@@ -418,16 +436,16 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
 }
 
 void PlanningMethod::DynamicModel(const double &step_size, const double &phi,
-                               double &x, double &y, double &theta) const {
+                               double &x, double &y, double &theta) const { // 更新车辆位置和方向
     x = x + step_size * std::cos(theta);
     y = y + step_size * std::sin(theta);
     theta = Mod2Pi(theta + step_size / wheel_base_ * std::tan(phi));
 }
 
-double PlanningMethod::Mod2Pi(const double &x) {
+double PlanningMethod::Mod2Pi(const double &x) { // 将给定的角度转换为等效的角度 使其位于区间 [-π, π] 内
     double v = fmod(x, 2 * M_PI);
   
-      if (v < -M_PI) {
+    if (v < -M_PI) {
         v += 2.0 * M_PI;
     } else if (v > M_PI) {
         v -= 2.0 * M_PI;
@@ -436,7 +454,7 @@ double PlanningMethod::Mod2Pi(const double &x) {
     return v;
 }
 
-bool PlanningMethod::BeyondBoundary(const Vec2d &pt) const {
+bool PlanningMethod::BeyondBoundary(const Vec2d &pt) const { // 边界判定
     return pt.x() < map_x_lower_ || pt.x() > map_x_upper_ || pt.y() < map_y_lower_ || pt.y() > map_y_upper_;
 }
 
@@ -505,7 +523,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
 
     auto goal_node_ptr = new StateNode(goal_grid_index);
     goal_node_ptr -> state_ = goal_state;
-    goal_node_ptr -> direction_ = StateNode::NO;
+    goal_node_ptr -> direction_ = StateNode::NO; 
     goal_node_ptr -> steering_grade_ = 0;
 
     auto start_node_ptr = new StateNode(start_grid_index);
@@ -528,13 +546,16 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     StateNode::Ptr neighbor_node_ptr;
 
     int count = 0;
+
     while (!openset_.empty()) {
         current_node_ptr = openset_.begin() -> second;
         current_node_ptr -> node_status_ = StateNode::IN_CLOSESET;
         openset_.erase(openset_.begin());
 
+        // 距离足够近
         if ((current_node_ptr -> state_.head(2) - goal_node_ptr -> state_.head(2)).norm() <= shot_distance_) {
             double rs_length = 0.0;
+
             if (AnalyticExpansions(current_node_ptr, goal_node_ptr, rs_length)) {
                 terminal_node_ptr_ = goal_node_ptr;
 
@@ -584,6 +605,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                 openset_.insert(std::make_pair(neighbor_node_ptr -> f_cost_, neighbor_node_ptr));
                 state_node_map_[index.x()][index.y()][index.z()] = neighbor_node_ptr;
                 continue;
+            
             } else if (state_node_map_[index.x()][index.y()][index.z()] -> node_status_ == StateNode::IN_OPENSET) {
                 double g_cost_temp = current_node_ptr -> g_cost_ + neighbor_edge_cost;
 
@@ -596,10 +618,12 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                     /// TODO: This will cause a memory leak
                     //delete state_node_map_[index.x()][index.y()][index.z()];
                     state_node_map_[index.x()][index.y()][index.z()] = neighbor_node_ptr;
+               
                 } else {
                     delete neighbor_node_ptr;
                 }
                 continue;
+            
             } else if (state_node_map_[index.x()][index.y()][index.z()] -> node_status_ == StateNode::IN_CLOSESET) {
                 delete neighbor_node_ptr;
                 continue;

@@ -113,11 +113,11 @@ private:
 
     std::multimap<double, StateNode::Ptr> openset_;
 
-    double wheel_base_; //The distance between the front and rear axles
+    double wheel_base_; // 前后轴之间的距离
     double segment_length_;
     double move_step_size_;
     double steering_radian_step_size_;
-    double steering_radian_; //radian
+    double steering_radian_; // 弧度
     double tie_breaker_;
 
     double shot_distance_;
