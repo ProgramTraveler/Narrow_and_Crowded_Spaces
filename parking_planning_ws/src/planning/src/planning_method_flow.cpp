@@ -77,6 +77,7 @@ void PlanningMethodFlow::Run() {
         
         for (unsigned int w = 0; w < map_w; ++ w) {
             for (unsigned int h = 0; h < map_h; ++ h) {
+                // 
                 auto x = static_cast<unsigned int> ((w + 0.5) * map_resolution
                                                     / current_costmap_ptr_ -> info.resolution);
                 auto y = static_cast<unsigned int> ((h + 0.5) * map_resolution
