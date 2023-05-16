@@ -1,6 +1,6 @@
 
 #include "planning/planning_method.h"
-#include "planning/display_tools.h"
+#include "ros/ros.h"
 #include "planning/timer.h"
 
 #include <iostream>

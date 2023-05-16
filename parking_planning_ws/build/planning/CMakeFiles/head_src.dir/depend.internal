@@ -202,24 +202,12 @@ planning/CMakeFiles/head_src.dir/src/init_pose_subscriber.cpp.o
  /opt/ros/noetic/include/xmlrpcpp/XmlRpcDecl.h
  /opt/ros/noetic/include/xmlrpcpp/XmlRpcValue.h
 planning/CMakeFiles/head_src.dir/src/planning_method.cpp.o
- /home/help/parking_planning_ws/src/planning/include/planning/display_tools.h
  /home/help/parking_planning_ws/src/planning/include/planning/planning_method.h
  /home/help/parking_planning_ws/src/planning/include/planning/rs_path.h
  /home/help/parking_planning_ws/src/planning/include/planning/state_node.h
  /home/help/parking_planning_ws/src/planning/include/planning/timer.h
  /home/help/parking_planning_ws/src/planning/include/planning/type.h
  /home/help/parking_planning_ws/src/planning/src/planning_method.cpp
- /opt/ros/noetic/include/geometry_msgs/Point.h
- /opt/ros/noetic/include/geometry_msgs/PointStamped.h
- /opt/ros/noetic/include/geometry_msgs/Pose.h
- /opt/ros/noetic/include/geometry_msgs/PoseStamped.h
- /opt/ros/noetic/include/geometry_msgs/Quaternion.h
- /opt/ros/noetic/include/geometry_msgs/QuaternionStamped.h
- /opt/ros/noetic/include/geometry_msgs/Transform.h
- /opt/ros/noetic/include/geometry_msgs/TransformStamped.h
- /opt/ros/noetic/include/geometry_msgs/Vector3.h
- /opt/ros/noetic/include/geometry_msgs/Vector3Stamped.h
- /opt/ros/noetic/include/nav_msgs/Path.h
  /opt/ros/noetic/include/ros/advertise_options.h
  /opt/ros/noetic/include/ros/advertise_service_options.h
  /opt/ros/noetic/include/ros/assert.h
@@ -238,7 +226,6 @@ planning/CMakeFiles/head_src.dir/src/planning_method.cpp.o
  /opt/ros/noetic/include/ros/message.h
  /opt/ros/noetic/include/ros/message_event.h
  /opt/ros/noetic/include/ros/message_forward.h
- /opt/ros/noetic/include/ros/message_operations.h
  /opt/ros/noetic/include/ros/message_traits.h
  /opt/ros/noetic/include/ros/names.h
  /opt/ros/noetic/include/ros/node_handle.h
@@ -276,18 +263,6 @@ planning/CMakeFiles/head_src.dir/src/planning_method.cpp.o
  /opt/ros/noetic/include/ros/wall_timer.h
  /opt/ros/noetic/include/ros/wall_timer_options.h
  /opt/ros/noetic/include/rosconsole/macros_generated.h
- /opt/ros/noetic/include/std_msgs/ColorRGBA.h
- /opt/ros/noetic/include/std_msgs/Header.h
- /opt/ros/noetic/include/std_msgs/String.h
- /opt/ros/noetic/include/tf/LinearMath/Matrix3x3.h
- /opt/ros/noetic/include/tf/LinearMath/MinMax.h
- /opt/ros/noetic/include/tf/LinearMath/QuadWord.h
- /opt/ros/noetic/include/tf/LinearMath/Quaternion.h
- /opt/ros/noetic/include/tf/LinearMath/Scalar.h
- /opt/ros/noetic/include/tf/LinearMath/Transform.h
- /opt/ros/noetic/include/tf/LinearMath/Vector3.h
- /opt/ros/noetic/include/tf/transform_datatypes.h
- /opt/ros/noetic/include/visualization_msgs/Marker.h
  /opt/ros/noetic/include/xmlrpcpp/XmlRpcDecl.h
  /opt/ros/noetic/include/xmlrpcpp/XmlRpcValue.h
  /usr/include/eigen3/Eigen/Cholesky

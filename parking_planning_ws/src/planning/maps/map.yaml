@@ -1,5 +1,5 @@
 # 地图路径 可以是相对路径或者绝对路径
-image: map_slalom.png
+image: map_narrow.png
 
 # 地图分辨率(地图刻度尺) 米/像素
 resolution: 1

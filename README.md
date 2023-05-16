@@ -162,4 +162,9 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 * 继续 search() 部分
 * 包括相邻节点搜索 路径障碍物检测 边界检测 Bresenham算法
 
+### 2023-05-16
+
+* 修改路径发布 topic
+* 搜索树
+
 ---
