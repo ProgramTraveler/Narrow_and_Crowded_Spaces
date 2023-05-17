@@ -165,7 +165,7 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 ### 2023-05-15
 
 * 继续 search() 部分
-* 包括相邻节点搜索 路径障碍物检测 边界检测 Bresenham算法
+* 相邻节点搜索 
 
 ### 2023-05-16
 
@@ -174,5 +174,11 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 * 绘制地图 设计垂直车位和水平车位
 
 <img src="images/map_grid.png" alt="map_grid" style="zoom: 133%;" />
+
+### 2023-05-17
+
+* 路径障碍物碰撞检测 
+* 边界检测 Bresenham算法
+* 测试效果
 
 ---
