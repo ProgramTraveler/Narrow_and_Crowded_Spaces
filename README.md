@@ -172,13 +172,26 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 * 修改路径发布 topic
 * 路径正常发布
 * 绘制地图 设计垂直车位和水平车位
+<div style="text-align: left">
+	<img src="images/map_grid.png" alt="map_grid" style="zoom: 65%;" />
+</div>
 
-<img src="images/map_grid.png" alt="map_grid" style="zoom: 133%;" />
 
 ### 2023-05-17
 
 * 路径障碍物碰撞检测 
 * 边界检测 Bresenham算法
-* 测试效果
+* 测试效果  
+
+**垂直车位停车**
+<img src="images/Vertical_ parking.png" alt="垂直停车" style="zoom: 33%">
+
+**水平车位停车**
+<img src="images/Horizontal_ parking.png" alt="水平停车" style="zoom: 33%">
+
+**水平车位停车-1**
+<img src="images/Horizontal_ parking_1.png" alt="水平停车_1" style="zoom: 38%">
+
+* 规划时间和车辆的起始位置还是有关系的 如果生成的路径存在一些不必要的倒车和转弯的话 时间上的花费是很高的 可能是 3-4 倍
 
 ---
