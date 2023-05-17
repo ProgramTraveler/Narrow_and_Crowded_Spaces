@@ -83,6 +83,11 @@
 
 # 日志
 
+## 代码参考
+
+* 理解算法实现 -> [`混合A*算法`的matlab复现](https://github.com/wanghuohuo0716/hybrid_A_star)
+* 博客 -> [自动泊车实例](https://www.guyuehome.com/author/617f950de99b5)
+
 ## 日期
 
 ### 2023-04-20
@@ -165,6 +170,9 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 ### 2023-05-16
 
 * 修改路径发布 topic
-* 搜索树
+* 路径正常发布
+* 绘制地图 设计垂直车位和水平车位
+
+<img src="images/map_grid.png" alt="map_grid" style="zoom: 133%;" />
 
 ---

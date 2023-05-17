@@ -481,16 +481,7 @@ TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_
                                    goal_state.x(), goal_state.y(), goal_state.z());
 
     length = rs_path.Length() * turning_radius_;
-    // Debug info
-//    std::cout << "rs length: " << rs_path.Length() << "  | "
-//              << rs_path.length_[0] << " " << rs_path.length_[1] << " "
-//              << rs_path.length_[2] << " " << rs_path.length_[3] << " "
-//              << rs_path.length_[4] << std::endl;
-//    std::cout << "type: "
-//              << rs_path.type_[0] << " " << rs_path.type_[1] << " "
-//              << rs_path.type_[2] << " " << rs_path.type_[3] << " "
-//              << rs_path.type_[4] << std::endl;
-
+    
     const double path_length = rs_path.Length() * turning_radius_;
     const auto interpolation_number = static_cast<unsigned int> (path_length / step_size);
 

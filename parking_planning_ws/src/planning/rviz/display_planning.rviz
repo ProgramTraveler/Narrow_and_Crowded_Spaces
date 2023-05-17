@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Path1
         - /Optimized Path1
-        - /Searched Tree1
         - /MarkerArray1
         - /Effort1
         - /RobotModel1
@@ -162,19 +161,19 @@ Visualization Manager:
       Unreliable: false
       Value: true
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /run_planning/searched_tree
       Name: Searched Tree
       Namespaces:
-        searched_tree: true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /run_planning/vehicle_path
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1

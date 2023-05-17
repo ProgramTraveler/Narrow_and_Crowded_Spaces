@@ -35,7 +35,7 @@ PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discret
     rs_path_ptr_ = std::make_shared<RSPath>(wheel_base_ / std::tan(steering_radian_));
     tie_breaker_ = 1.0 + 1e-3;
 
-    STATE_GRID_SIZE_PHI_ = grid_size_phi;
+    STATE_GRID_SIZE_PHI_ = grid_size_phi; // 72
     ANGULAR_RESOLUTION_ = 360.0 / STATE_GRID_SIZE_PHI_ * M_PI / 180.0; // 角度分辨率
 }
 
@@ -70,16 +70,16 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
     map_data_ = new uint8_t[MAP_GRID_SIZE_X_ * MAP_GRID_SIZE_Y_];
 
     if (state_node_map_) {
-        for (int i = 0; i < STATE_GRID_SIZE_X_; ++i) {
+        for (int i = 0; i < STATE_GRID_SIZE_X_; ++ i) {
 
             if (state_node_map_[i] == nullptr)
                 continue;
 
-            for (int j = 0; j < STATE_GRID_SIZE_Y_; ++j) {
+            for (int j = 0; j < STATE_GRID_SIZE_Y_; ++ j) {
                 if (state_node_map_[i][j] == nullptr)
                     continue;
 
-                for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++k) {
+                for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++ k) {
                     if (state_node_map_[i][j][k] != nullptr) {
                         delete state_node_map_[i][j][k];
                         state_node_map_[i][j][k] = nullptr;
@@ -98,11 +98,11 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
 
     // 节点在地图中的状态 x y phi 位置 角度
     state_node_map_ = new StateNode::Ptr **[STATE_GRID_SIZE_X_];
-    for (int i = 0; i < STATE_GRID_SIZE_X_; ++i) {
+    for (int i = 0; i < STATE_GRID_SIZE_X_; ++ i) {
         state_node_map_[i] = new StateNode::Ptr *[STATE_GRID_SIZE_Y_];
-        for (int j = 0; j < STATE_GRID_SIZE_Y_; ++j) {
+        for (int j = 0; j < STATE_GRID_SIZE_Y_; ++ j) {
             state_node_map_[i][j] = new StateNode::Ptr[STATE_GRID_SIZE_PHI_];
-            for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++k) {
+            for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++ k) {
                 state_node_map_[i][j][k] = nullptr;
             }
         }
@@ -147,7 +147,7 @@ inline bool PlanningMethod::LineCheck(double x0, double y0, double x1, double y1
     auto N = static_cast<unsigned int>(x1 - x0);
 
     // 遍历直线路径上的每个像素点
-    for (unsigned int i = 0; i < N; ++i) {
+    for (unsigned int i = 0; i < N; ++ i) {
         // 检查像素点是否存在障碍物或者是否超出边界
         if (steep) {
             if (HasObstacle(Vec2i(yk, x0 + i * 1.0))
@@ -184,7 +184,7 @@ bool PlanningMethod::CheckCollision(const double &x, const double &y, const doub
     MatXd transformed_vehicle_shape;
     transformed_vehicle_shape.resize(8, 1);
 
-    for (unsigned int i = 0; i < 4u; ++i) {
+    for (unsigned int i = 0; i < 4u; ++ i) {
         transformed_vehicle_shape.block<2, 1>(i * 2, 0)
                 = R * vehicle_shape_.block<2, 1>(i * 2, 0) + Vec2d(x, y);
     }
@@ -247,7 +247,7 @@ bool PlanningMethod::CheckCollision(const double &x, const double &y, const doub
     }
 
     check_collision_use_time += timer.End();
-    num_check_collision++;
+    num_check_collision ++;
 
     return true;
 }
@@ -323,7 +323,7 @@ void PlanningMethod::SetVehicleShape(double length, double width, double rear_ax
     const Vec2d edge_0_normalized = (vehicle_shape_.block<2, 1>(2, 0)
                                      - vehicle_shape_.block<2, 1>(0, 0)).normalized(); // 计算单位向量
 
-    for (unsigned int i = 0; i < N_length; ++i) { // 
+    for (unsigned int i = 0; i < N_length; ++ i) { // 
         vehicle_shape_discrete_.block<2, 1>(0, i + N_length)
                 = vehicle_shape_.block<2, 1>(4, 0) - edge_0_normalized * i * step_size;
         vehicle_shape_discrete_.block<2, 1>(0, i)
@@ -333,7 +333,7 @@ void PlanningMethod::SetVehicleShape(double length, double width, double rear_ax
     const Vec2d edge_1_normalized = (vehicle_shape_.block<2, 1>(4, 0)
                                      - vehicle_shape_.block<2, 1>(2, 0)).normalized();
 
-    for (unsigned int i = 0; i < N_width; ++i) { // 
+    for (unsigned int i = 0; i < N_width; ++ i) { // 
         vehicle_shape_discrete_.block<2, 1>(0, (2 * N_length) + i)
                 = vehicle_shape_.block<2, 1>(2, 0) + edge_1_normalized * i * step_size;
         vehicle_shape_discrete_.block<2, 1>(0, (2 * N_length) + i + N_width)
@@ -387,7 +387,7 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
         const double phi = i * steering_radian_step_size_;
 
         // forward
-        for (int j = 1; j <= segment_length_discrete_num_; j++) {
+        for (int j = 1; j <= segment_length_discrete_num_; j++ ) {
             DynamicModel(move_step_size_, phi, x, y, theta);
             intermediate_state.emplace_back(Vec3d(x, y, theta));
 
@@ -413,7 +413,7 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
         x = curr_node_ptr -> state_.x();
         y = curr_node_ptr -> state_.y();
         theta = curr_node_ptr -> state_.z();
-        for (int j = 1; j <= segment_length_discrete_num_; j++) {
+        for (int j = 1; j <= segment_length_discrete_num_; j++ ) {
             DynamicModel(-move_step_size_, phi, x, y, theta);
             intermediate_state.emplace_back(Vec3d(x, y, theta));
 
@@ -560,6 +560,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                 terminal_node_ptr_ = goal_node_ptr;
 
                 StateNode::Ptr grid_node_ptr = terminal_node_ptr_ -> parent_node_;
+
                 while (grid_node_ptr != nullptr) {
                     grid_node_ptr = grid_node_ptr -> parent_node_;
                     path_length_ = path_length_ + segment_length_;
@@ -585,7 +586,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         GetNeighborNodes(current_node_ptr, neighbor_nodes_ptr);
         neighbor_time = neighbor_time + timer_get_neighbor.End();
 
-        for (unsigned int i = 0; i < neighbor_nodes_ptr.size(); ++i) {
+        for (unsigned int i = 0; i < neighbor_nodes_ptr.size(); ++ i) {
             neighbor_node_ptr = neighbor_nodes_ptr[i];
 
             Timer timer_compute_g;
@@ -630,7 +631,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
             }
         }
 
-        count++;
+        count ++;
         if (count > 50000) {
             ROS_WARN("Exceeded the number of iterations, the search failed");
             return false;
@@ -645,15 +646,15 @@ VectorVec4d PlanningMethod::GetSearchedTree() {
     Vec4d point_pair;
 
     visited_node_number_ = 0;
-    for (int i = 0; i < STATE_GRID_SIZE_X_; ++i) {
-        for (int j = 0; j < STATE_GRID_SIZE_Y_; ++j) {
-            for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++k) {
+    for (int i = 0; i < STATE_GRID_SIZE_X_; ++ i) {
+        for (int j = 0; j < STATE_GRID_SIZE_Y_; ++ j) {
+            for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++ k) {
                 if (state_node_map_[i][j][k] == nullptr || state_node_map_[i][j][k] -> parent_node_ == nullptr) {
                     continue;
                 }
 
                 const unsigned int number_states = state_node_map_[i][j][k] -> intermediate_states_.size() - 1;
-                for (unsigned int l = 0; l < number_states; ++l) {
+                for (unsigned int l = 0; l < number_states; ++ l) {
                     point_pair.head(2) = state_node_map_[i][j][k] -> intermediate_states_[l].head(2);
                     point_pair.tail(2) = state_node_map_[i][j][k] -> intermediate_states_[l + 1].head(2);
 
@@ -663,7 +664,7 @@ VectorVec4d PlanningMethod::GetSearchedTree() {
                 point_pair.head(2) = state_node_map_[i][j][k] -> intermediate_states_[0].head(2);
                 point_pair.tail(2) = state_node_map_[i][j][k] -> parent_node_ -> state_.head(2);
                 tree.emplace_back(point_pair);
-                visited_node_number_++;
+                visited_node_number_ ++;
             }
         }
     }
@@ -678,15 +679,15 @@ void PlanningMethod::ReleaseMemory() {
     }
 
     if (state_node_map_) {
-        for (int i = 0; i < STATE_GRID_SIZE_X_; ++i) {
+        for (int i = 0; i < STATE_GRID_SIZE_X_; ++ i) {
             if (state_node_map_[i] == nullptr)
                 continue;
 
-            for (int j = 0; j < STATE_GRID_SIZE_Y_; ++j) {
+            for (int j = 0; j < STATE_GRID_SIZE_Y_; ++ j) {
                 if (state_node_map_[i][j] == nullptr)
                     continue;
 
-                for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++k) {
+                for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++ k) {
                     if (state_node_map_[i][j][k] != nullptr) {
                         delete state_node_map_[i][j][k];
                         state_node_map_[i][j][k] = nullptr;
@@ -734,15 +735,15 @@ VectorVec3d PlanningMethod::GetPath() const {
 
 void PlanningMethod::Reset() {
     if (state_node_map_) {
-        for (int i = 0; i < STATE_GRID_SIZE_X_; ++i) {
+        for (int i = 0; i < STATE_GRID_SIZE_X_; ++ i) {
             if (state_node_map_[i] == nullptr)
                 continue;
 
-            for (int j = 0; j < STATE_GRID_SIZE_Y_; ++j) {
+            for (int j = 0; j < STATE_GRID_SIZE_Y_; ++ j) {
                 if (state_node_map_[i][j] == nullptr)
                     continue;
 
-                for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++k) {
+                for (int k = 0; k < STATE_GRID_SIZE_PHI_; ++ k) {
                     if (state_node_map_[i][j][k] != nullptr) {
                         delete state_node_map_[i][j][k];
                         state_node_map_[i][j][k] = nullptr;
@@ -762,7 +763,7 @@ bool PlanningMethod::AnalyticExpansions(const StateNode::Ptr &current_node_ptr,
                                                         goal_node_ptr -> state_,
                                                         move_step_size_, length);
 
-    for (const auto &pose: rs_path_poses)
+    for (const auto &pose : rs_path_poses)
         if (BeyondBoundary(pose.head(2)) || !CheckCollision(pose.x(), pose.y(), pose.z())) {
             return false;
         };
