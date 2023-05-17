@@ -26,6 +26,7 @@ PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discret
     steering_penalty_ = steering_penalty;
     steering_change_penalty_ = steering_change_penalty;
     reversing_penalty_ = reversing_penalty;
+
     shot_distance_ = shot_distance; 
 
     CHECK_EQ(static_cast<float>(segment_length_discrete_num_ * move_step_size_), static_cast<float>(segment_length_))
@@ -66,6 +67,7 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
         delete[] map_data_;
         map_data_ = nullptr;
     }
+
     // uint8_t 无符号八位整数
     map_data_ = new uint8_t[MAP_GRID_SIZE_X_ * MAP_GRID_SIZE_Y_];
 
@@ -373,7 +375,7 @@ Vec2i PlanningMethod::Coordinate2MapGridIndex(const Vec2d &pt) const {
 }
 
 void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
-                                   std::vector<StateNode::Ptr> &neighbor_nodes) {
+                                   std::vector<StateNode::Ptr> &neighbor_nodes) { // 扩展节点
     neighbor_nodes.clear();
 
     for (int i = -steering_discrete_num_; i <= steering_discrete_num_; ++ i) {
@@ -461,10 +463,10 @@ bool PlanningMethod::BeyondBoundary(const Vec2d &pt) const { // 边界判定
 double PlanningMethod::ComputeH(const StateNode::Ptr &current_node_ptr,
                              const StateNode::Ptr &terminal_node_ptr) {
     double h;
-    // L2
-//    h = (current_node_ptr -> state_.head(2) - terminal_node_ptr -> state_.head(2)).norm();
+    // L2 欧几里德范数
+    // h = (current_node_ptr -> state_.head(2) - terminal_node_ptr -> state_.head(2)).norm();
 
-    // L1
+    // L1 曼哈顿范数
     h = (current_node_ptr -> state_.head(2) - terminal_node_ptr -> state_.head(2)).lpNorm<1>();
 
     if (h < 3.0 * shot_distance_) {
@@ -578,6 +580,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
 
                 check_collision_use_time = 0.0;
                 num_check_collision = 0.0;
+
                 return true;
             }
         }
@@ -586,7 +589,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         GetNeighborNodes(current_node_ptr, neighbor_nodes_ptr);
         neighbor_time = neighbor_time + timer_get_neighbor.End();
 
-        for (unsigned int i = 0; i < neighbor_nodes_ptr.size(); ++ i) {
+        for (unsigned int i = 0; i < neighbor_nodes_ptr.size(); ++ i) { // 计算 cost
             neighbor_node_ptr = neighbor_nodes_ptr[i];
 
             Timer timer_compute_g;
@@ -626,7 +629,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                 continue;
             
             } else if (state_node_map_[index.x()][index.y()][index.z()] -> node_status_ == StateNode::IN_CLOSESET) {
-                delete neighbor_node_ptr;
+                delete neighbor_node_ptr; // ？
                 continue;
             }
         }

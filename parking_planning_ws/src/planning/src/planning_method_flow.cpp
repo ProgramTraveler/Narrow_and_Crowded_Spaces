@@ -27,7 +27,7 @@ PlanningMethodFlow::PlanningMethodFlow(ros::NodeHandle &nh) { // 初始化
     double segment_length = nh.param("planner/segment_length", 1.6); // 段长
     int segment_length_discrete_num = nh.param("planner/segment_length_discrete_num", 8); // 段长离散数
 
-    double steering_penalty = nh.param("planner/steering_penalty", 1.05); // 转向惩罚
+    double steering_penalty = nh.param("planner/steering_penalty", 1.05);
     double steering_change_penalty = nh.param("planner/steering_change_penalty", 1.5); // 转向变化惩罚
 
     double reversing_penalty = nh.param("planner/reversing_penalty", 2.0); // 倒车惩罚
@@ -62,7 +62,7 @@ void PlanningMethodFlow::Run() {
         current_costmap_ptr_ = costmap_deque_.front();
         costmap_deque_.pop_front();
 
-        const double map_resolution = 0.2;
+        const double map_resolution = 0.2; // 生成栅格地图的大小
 
         kinodynamic_searcher_ptr_ -> Init(
                 /*

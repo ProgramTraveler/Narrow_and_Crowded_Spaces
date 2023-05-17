@@ -114,17 +114,23 @@ private:
     std::multimap<double, StateNode::Ptr> openset_;
 
     double wheel_base_; // 前后轴之间的距离
+
     double segment_length_;
+    int segment_length_discrete_num_;
+
     double move_step_size_;
+
     double steering_radian_step_size_;
     double steering_radian_; // 弧度
-    double tie_breaker_;
-
-    double shot_distance_;
-    int segment_length_discrete_num_;
     int steering_discrete_num_;
-    double steering_penalty_;
-    double reversing_penalty_;
+
+    double tie_breaker_; // 处理子结点和父节点在同一栅格的情况
+
+    double shot_distance_; // 命中距离 当前点与目标点的距离小于该变量时视为命中终点
+
+
+    double steering_penalty_; // 
+    double reversing_penalty_; // 倒车惩罚
     double steering_change_penalty_;
 
     double path_length_ = 0.0;
