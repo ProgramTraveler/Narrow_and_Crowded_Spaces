@@ -37,7 +37,7 @@ struct StateNode {
     Vec3i grid_index_;
 
     double g_cost_{}, f_cost_{};
-    int steering_grade_{};
+    int steering_grade_{}; // 变量的值分别代表 左转 不转 右转
 
     StateNode *parent_node_;
     typedef StateNode *Ptr;

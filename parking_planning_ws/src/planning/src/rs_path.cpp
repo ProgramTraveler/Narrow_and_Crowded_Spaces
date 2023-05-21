@@ -86,6 +86,8 @@ bool RSPath::LpSpRp(double x, double y, double phi, double &t, double &u, double
 
 RSPath::RSPathData RSPath::GetRSPath(const double x_0, const double y_0, const double yaw_0,
                                      const double x_1, const double y_1, const double yaw_1) {
+    // 通过平移和旋转将两个点装换到新的坐标系中 在新坐标系中 起点位于原点 且方向与 x 轴对齐
+
     // translation
     double dx = x_1 - x_0;
     double dy = y_1 - y_0;
@@ -96,11 +98,15 @@ RSPath::RSPathData RSPath::GetRSPath(const double x_0, const double y_0, const d
     double x = c * dx + s * dy;
     double y = -s * dx + c * dy;
     double phi = yaw_1 - yaw_0;
-    return GetRSPath(x / turning_radius_, y / turning_radius_, phi);
+
+    return GetRSPath(x / turning_radius_, y / turning_radius_, phi); // 计两点之间的最小值
 }
 
-RSPath::RSPathData RSPath::GetRSPath(const double x, const double y, const double phi) {
+RSPath::RSPathData RSPath::GetRSPath(const double x, const double y, const double phi) { // 计算两点之间的最短路径
+    // C 表示圆弧
+    // S 表示直线
     RSPathData path;
+    
     CSC(x, y, phi, path);
     CCC(x, y, phi, path);
     CCCC(x, y, phi, path);

@@ -132,7 +132,7 @@ void PlanningMethodFlow::Run() {
         if (kinodynamic_searcher_ptr_ -> Search(start_state, goal_state)) {
             auto path = kinodynamic_searcher_ptr_ -> GetPath();
             PublishPath(path);
-            PublishVehiclePath(path, 4.0, 2.0, 5u);
+            PublishVehiclePath(path, 4.7, 2.0, 5u);
             PublishSearchedTree(kinodynamic_searcher_ptr_ -> GetSearchedTree());
 
             nav_msgs::Path path_ros;
@@ -238,6 +238,7 @@ void PlanningMethodFlow::PublishVehiclePath(const VectorVec3d &path, double widt
         vehicle.header.stamp = ros::Time::now();
         vehicle.type = visualization_msgs::Marker::CUBE;
         vehicle.id = static_cast<int>(i / vehicle_interval);
+
         vehicle.scale.x = width;
         vehicle.scale.y = length;
         vehicle.scale.z = 0.01;

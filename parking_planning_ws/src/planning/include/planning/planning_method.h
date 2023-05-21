@@ -101,12 +101,13 @@ private:
 
 private:
     uint8_t *map_data_ = nullptr;
-    double STATE_GRID_RESOLUTION_{}, MAP_GRID_RESOLUTION_{};
+    double STATE_GRID_RESOLUTION_{}, MAP_GRID_RESOLUTION_{}; // 世界地图和栅格地图分辨率
     double ANGULAR_RESOLUTION_{};
-    int STATE_GRID_SIZE_X_{}, STATE_GRID_SIZE_Y_{}, STATE_GRID_SIZE_PHI_{};
-    int MAP_GRID_SIZE_X_{}, MAP_GRID_SIZE_Y_{};
+    int STATE_GRID_SIZE_X_{}, STATE_GRID_SIZE_Y_{}, STATE_GRID_SIZE_PHI_{}; // 世界地图 x y phi
 
-    double map_x_lower_{}, map_x_upper_{}, map_y_lower_{}, map_y_upper_{};
+    int MAP_GRID_SIZE_X_{}, MAP_GRID_SIZE_Y_{}; // 栅格地图 x y
+
+    double map_x_lower_{}, map_x_upper_{}, map_y_lower_{}, map_y_upper_{}; // 世界地图的 x y 轴的最小和最大值
 
     StateNode::Ptr terminal_node_ptr_ = nullptr;
     StateNode::Ptr ***state_node_map_ = nullptr;

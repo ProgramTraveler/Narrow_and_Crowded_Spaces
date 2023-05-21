@@ -37,6 +37,7 @@ PlanningMethod::PlanningMethod(double steering_angle, int steering_angle_discret
     tie_breaker_ = 1.0 + 1e-3;
 
     STATE_GRID_SIZE_PHI_ = grid_size_phi; // 72
+
     ANGULAR_RESOLUTION_ = 360.0 / STATE_GRID_SIZE_PHI_ * M_PI / 180.0; // 角度分辨率
 }
 
@@ -49,17 +50,18 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
     SetVehicleShape(4.7, 2.0, 1.3);
     
     // [m]
-    map_x_lower_ = x_lower; // 地图 x 轴的最小值
-    map_x_upper_ = x_upper; // 地图 x 轴的最大值
-    map_y_lower_ = y_lower; // 地图 y 轴的最小值
-    map_y_upper_ = y_upper; // 地图 y 轴的最大值
+    map_x_lower_ = x_lower; // 世界地图 x 轴的最小值
+    map_x_upper_ = x_upper; // 世界地图 x 轴的最大值
+    map_y_lower_ = y_lower; // 世界地图 y 轴的最小值
+    map_y_upper_ = y_upper; // 世界地图 y 轴的最大值
 
     STATE_GRID_RESOLUTION_ = state_grid_resolution; // current_costmap_ptr_ -> info.resolution
     MAP_GRID_RESOLUTION_ = map_grid_resolution;
-
+    
     STATE_GRID_SIZE_X_ = std::floor((map_x_upper_ - map_x_lower_) / STATE_GRID_RESOLUTION_);
     STATE_GRID_SIZE_Y_ = std::floor((map_y_upper_ - map_y_lower_) / STATE_GRID_RESOLUTION_);
 
+    
     MAP_GRID_SIZE_X_ = std::floor((map_x_upper_ - map_x_lower_) / MAP_GRID_RESOLUTION_);
     MAP_GRID_SIZE_Y_ = std::floor((map_y_upper_ - map_y_lower_) / MAP_GRID_RESOLUTION_);
 
@@ -378,7 +380,7 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
                                    std::vector<StateNode::Ptr> &neighbor_nodes) { // 扩展节点
     neighbor_nodes.clear();
 
-    for (int i = -steering_discrete_num_; i <= steering_discrete_num_; ++ i) {
+    for (int i = -steering_discrete_num_; i <= steering_discrete_num_; ++ i) { // -1 0 1 左转 不转 右转
         VectorVec3d intermediate_state;
         bool has_obstacle = false;
 
@@ -400,21 +402,26 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
         }
 
         Vec3i grid_index = State2Index(intermediate_state.back());
-        if (!BeyondBoundary(intermediate_state.back().head(2)) && !has_obstacle) { // 
+
+        if (!BeyondBoundary(intermediate_state.back().head(2)) && !has_obstacle) { // 对最后一个点判定
             auto neighbor_forward_node_ptr = new StateNode(grid_index);
+
             neighbor_forward_node_ptr -> intermediate_states_ = intermediate_state;
             neighbor_forward_node_ptr -> state_ = intermediate_state.back();
             neighbor_forward_node_ptr -> steering_grade_ = i;
             neighbor_forward_node_ptr -> direction_ = StateNode::FORWARD;
-            neighbor_nodes.push_back(neighbor_forward_node_ptr);
+
+            neighbor_nodes.push_back(neighbor_forward_node_ptr); // 这个点是合理的(没有碰到边界 也没有碰撞障碍物)
         }
 
         // backward
         has_obstacle = false;
         intermediate_state.clear();
+
         x = curr_node_ptr -> state_.x();
         y = curr_node_ptr -> state_.y();
         theta = curr_node_ptr -> state_.z();
+
         for (int j = 1; j <= segment_length_discrete_num_; j++ ) {
             DynamicModel(-move_step_size_, phi, x, y, theta);
             intermediate_state.emplace_back(Vec3d(x, y, theta));
@@ -427,11 +434,13 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
 
         if (!BeyondBoundary(intermediate_state.back().head(2)) && !has_obstacle) {
             grid_index = State2Index(intermediate_state.back());
+
             auto neighbor_backward_node_ptr = new StateNode(grid_index);
             neighbor_backward_node_ptr -> intermediate_states_ = intermediate_state;
             neighbor_backward_node_ptr -> state_ = intermediate_state.back();
             neighbor_backward_node_ptr -> steering_grade_ = i;
             neighbor_backward_node_ptr -> direction_ = StateNode::BACKWARD;
+
             neighbor_nodes.push_back(neighbor_backward_node_ptr);
         }
     }
@@ -441,6 +450,7 @@ void PlanningMethod::DynamicModel(const double &step_size, const double &phi,
                                double &x, double &y, double &theta) const { // 更新车辆位置和方向
     x = x + step_size * std::cos(theta);
     y = y + step_size * std::sin(theta);
+
     theta = Mod2Pi(theta + step_size / wheel_base_ * std::tan(phi));
 }
 
@@ -461,7 +471,7 @@ bool PlanningMethod::BeyondBoundary(const Vec2d &pt) const { // 边界判定
 }
 
 double PlanningMethod::ComputeH(const StateNode::Ptr &current_node_ptr,
-                             const StateNode::Ptr &terminal_node_ptr) {
+                             const StateNode::Ptr &terminal_node_ptr) { // 当前到目标的启发值
     double h;
     // L2 欧几里德范数
     // h = (current_node_ptr -> state_.head(2) - terminal_node_ptr -> state_.head(2)).norm();
@@ -480,30 +490,39 @@ double PlanningMethod::ComputeH(const StateNode::Ptr &current_node_ptr,
 }
 
 double PlanningMethod::ComputeG(const StateNode::Ptr &current_node_ptr,
-                             const StateNode::Ptr &neighbor_node_ptr) const {
+                             const StateNode::Ptr &neighbor_node_ptr) const { // 当前的 g(x)
     double g;
+
     if (neighbor_node_ptr -> direction_ == StateNode::FORWARD) {
-        if (neighbor_node_ptr -> steering_grade_ != current_node_ptr -> steering_grade_) {
-            if (neighbor_node_ptr -> steering_grade_ == 0) {
+
+        if (neighbor_node_ptr -> steering_grade_ != current_node_ptr -> steering_grade_) { // 发生转向
+            // 尽量走直线
+            if (neighbor_node_ptr -> steering_grade_ == 0) { // 从转弯回正
                 g = segment_length_ * steering_change_penalty_;
-            } else {
+            } else { // 打方向盘
                 g = segment_length_ * steering_change_penalty_ * steering_penalty_;
             }
-        } else {
+
+        } else { // 方向没有变化
+
             if (neighbor_node_ptr -> steering_grade_ == 0) {
                 g = segment_length_;
             } else {
                 g = segment_length_ * steering_penalty_;
             }
         }
-    } else {
+
+    } else { // 倒车
+
         if (neighbor_node_ptr -> steering_grade_ != current_node_ptr -> steering_grade_) {
             if (neighbor_node_ptr -> steering_grade_ == 0) {
                 g = segment_length_ * steering_change_penalty_ * reversing_penalty_;
             } else {
                 g = segment_length_ * steering_change_penalty_ * steering_penalty_ * reversing_penalty_;
             }
+
         } else {
+
             if (neighbor_node_ptr -> steering_grade_ == 0) {
                 g = segment_length_ * reversing_penalty_;
             } else {
@@ -541,7 +560,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
     state_node_map_[goal_grid_index.x()][goal_grid_index.y()][goal_grid_index.z()] = goal_node_ptr;
 
     openset_.clear();
-    openset_.insert(std::make_pair(0, start_node_ptr));
+    openset_.insert(std::make_pair(0, start_node_ptr)); // (f_cost_, StateNode)
 
     std::vector<StateNode::Ptr> neighbor_nodes_ptr;
     StateNode::Ptr current_node_ptr;
@@ -561,6 +580,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
             if (AnalyticExpansions(current_node_ptr, goal_node_ptr, rs_length)) {
                 terminal_node_ptr_ = goal_node_ptr;
 
+                // 回溯
                 StateNode::Ptr grid_node_ptr = terminal_node_ptr_ -> parent_node_;
 
                 while (grid_node_ptr != nullptr) {
@@ -600,18 +620,20 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
             const double current_h = ComputeH(current_node_ptr, goal_node_ptr) * tie_breaker_;
             compute_h_time = compute_h_time + timer_compute_h.End();
 
-            const Vec3i &index = neighbor_node_ptr -> grid_index_;
+            const Vec3i &index = neighbor_node_ptr -> grid_index_; // 索引
+
             if (state_node_map_[index.x()][index.y()][index.z()] == nullptr) {
-                neighbor_node_ptr -> g_cost_ = current_node_ptr -> g_cost_ + neighbor_edge_cost;
+                neighbor_node_ptr -> g_cost_ = current_node_ptr -> g_cost_ + neighbor_edge_cost; // 起点到当前的距离
                 neighbor_node_ptr -> parent_node_ = current_node_ptr;
                 neighbor_node_ptr -> node_status_ = StateNode::IN_OPENSET;
-                neighbor_node_ptr -> f_cost_ = neighbor_node_ptr -> g_cost_ + current_h;
+                neighbor_node_ptr -> f_cost_ = neighbor_node_ptr -> g_cost_ + current_h; // f(x) = g(x) + h(x)
                 openset_.insert(std::make_pair(neighbor_node_ptr -> f_cost_, neighbor_node_ptr));
+                
                 state_node_map_[index.x()][index.y()][index.z()] = neighbor_node_ptr;
                 continue;
             
             } else if (state_node_map_[index.x()][index.y()][index.z()] -> node_status_ == StateNode::IN_OPENSET) {
-                double g_cost_temp = current_node_ptr -> g_cost_ + neighbor_edge_cost;
+                double g_cost_temp = current_node_ptr -> g_cost_ + neighbor_edge_cost; // 当前的 g(x)
 
                 if (state_node_map_[index.x()][index.y()][index.z()] -> g_cost_ > g_cost_temp) {
                     neighbor_node_ptr -> g_cost_ = g_cost_temp;
@@ -629,7 +651,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                 continue;
             
             } else if (state_node_map_[index.x()][index.y()][index.z()] -> node_status_ == StateNode::IN_CLOSESET) {
-                delete neighbor_node_ptr; // ？
+                delete neighbor_node_ptr; // 从 close 中删除
                 continue;
             }
         }
@@ -722,6 +744,7 @@ VectorVec3d PlanningMethod::GetPath() const {
     std::vector<StateNode::Ptr> temp_nodes;
 
     StateNode::Ptr state_grid_node_ptr = terminal_node_ptr_;
+    
     while (state_grid_node_ptr != nullptr) {
         temp_nodes.emplace_back(state_grid_node_ptr);
         state_grid_node_ptr = state_grid_node_ptr -> parent_node_;
