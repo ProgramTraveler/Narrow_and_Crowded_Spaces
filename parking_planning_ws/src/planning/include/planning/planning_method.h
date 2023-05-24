@@ -30,6 +30,9 @@ public:
 
     VectorVec3d GetPath() const;
 
+    /*
+        __attribute__((unused)) 用于指示编译器不要对未使用的函数、变量或类型产生警告
+    */
     __attribute__((unused)) int GetVisitedNodesNumber() const { return visited_node_number_; }
 
     __attribute__((unused)) double GetPathLength() const;
