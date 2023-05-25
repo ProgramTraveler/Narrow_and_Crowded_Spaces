@@ -23,7 +23,7 @@
 
 # 相关思路
 
-## 图解
+## 图解(.pdf)
 
 <img src="images/图解.png" alt="图解" style="zoom: 25%">
 
