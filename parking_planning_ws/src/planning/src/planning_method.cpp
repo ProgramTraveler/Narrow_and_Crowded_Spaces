@@ -455,7 +455,7 @@ void PlanningMethod::DynamicModel(const double &step_size, const double &phi,
 }
 
 double PlanningMethod::Mod2Pi(const double &x) { // 将给定的角度转换为等效的角度 使其位于区间 [-π, π] 内
-    double v = fmod(x, 2 * M_PI);
+    double v = fmod(x, 2 * M_PI); // 计算两个浮点数相除的余数
   
     if (v < -M_PI) {
         v += 2.0 * M_PI;

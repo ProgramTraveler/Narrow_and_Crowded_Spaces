@@ -21,6 +21,13 @@
 
 ---
 
+# 相关思路
+
+## 图解
+
+<img src="images/图解.png" alt="图解" style="zoom: 25%">
+
+
 # 前期准备
 
 ## 环境配置和前期知识储备
@@ -180,7 +187,7 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 ### 2023-05-17
 
 * 路径障碍物碰撞检测 
-* 边界检测 Bresenham算法
+* 边界检测 Bresenham 算法
 
 ### 2023-05-21
 
