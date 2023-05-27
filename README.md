@@ -27,6 +27,20 @@
 
 <img src="images/图解.png" alt="图解" style="zoom: 25%">
 
+## 效果
+
+**垂直车位停车**
+<img src="images/Vertical_ parking.png" alt="垂直停车" style="zoom: 33%">
+
+**水平车位停车**
+<img src="images/Horizontal_ parking.png" alt="水平停车" style="zoom: 33%">
+
+**水平车位停车-1**
+<img src="images/Horizontal_ parking_1.png" alt="水平停车_1" style="zoom: 38%">
+
+**水平车位停车-2**
+<img src="images/Horizontal_ parking_2.png" alt="水平停车_2" style="zoom: 33%">
+
 
 # 前期准备
 
@@ -192,22 +206,8 @@ sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 ### 2023-05-21
 
 * 修改一些参数
-* 测试效果  
-
-**垂直车位停车**
-<img src="images/Vertical_ parking.png" alt="垂直停车" style="zoom: 33%">
-
-**水平车位停车**
-<img src="images/Horizontal_ parking.png" alt="水平停车" style="zoom: 33%">
-
-**水平车位停车-1**
-<img src="images/Horizontal_ parking_1.png" alt="水平停车_1" style="zoom: 38%">
-
-**水平车位停车-2**
-<img src="images/Horizontal_ parking_2.png" alt="水平停车_2" style="zoom: 33%">
-
+* 测试效果 
 * 规划时间和车辆的起始位置还是有关系的 如果生成的路径存在一些不必要的倒车和转弯的话 时间上的花费是很高的 可能是 3-4 倍
-
 
 ---
 
