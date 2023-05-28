@@ -32,6 +32,12 @@
 **垂直车位停车**
 <img src="images/Vertical_ parking.png" alt="垂直停车" style="zoom: 33%">
 
+**垂直车位停车-1**
+<img src="images/Vertical_ parking_1.png" alt="垂直停车_1" style="zoom: 33%">
+
+**垂直停车-2**
+<img src="images/Vertical_ parking_2.png" alt="垂直停车_2" style="zoom: 33%">
+
 **水平车位停车**
 <img src="images/Horizontal_ parking.png" alt="水平停车" style="zoom: 33%">
 
@@ -40,6 +46,14 @@
 
 **水平车位停车-2**
 <img src="images/Horizontal_ parking_2.png" alt="水平停车_2" style="zoom: 33%">
+
+**时间**
+**垂直车位停车-1花费**
+<img src="images/Vertical_ parking_time_1.png" alt="垂直停车_1花费时间" style="zoom: 133%">
+
+**垂直车位停车-2花费**
+<img src="images/Vertical_ parking_time_2.png" alt="垂直停车_2花费时间" style="zoom: 133%">
+
 
 
 # 前期准备
