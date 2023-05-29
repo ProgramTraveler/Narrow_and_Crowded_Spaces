@@ -483,6 +483,7 @@ void RSPath::CCSCC(double x, double y, double phi, RSPathData &path) {
 
 TypeVectorVecd<3> RSPath::GetRSPath(const Vec3d &start_state, const Vec3d &goal_state,
                                     const double step_size, double &length) {
+                                        
     RSPathData rs_path = GetRSPath(start_state.x(), start_state.y(), start_state.z(),
                                    goal_state.x(), goal_state.y(), goal_state.z());
 

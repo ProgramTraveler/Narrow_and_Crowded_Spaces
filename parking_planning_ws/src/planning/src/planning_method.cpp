@@ -61,7 +61,7 @@ void PlanningMethod::Init(double x_lower, double x_upper, double y_lower, double
     STATE_GRID_SIZE_X_ = std::floor((map_x_upper_ - map_x_lower_) / STATE_GRID_RESOLUTION_);
     STATE_GRID_SIZE_Y_ = std::floor((map_y_upper_ - map_y_lower_) / STATE_GRID_RESOLUTION_);
 
-    
+    // 栅格地图
     MAP_GRID_SIZE_X_ = std::floor((map_x_upper_ - map_x_lower_) / MAP_GRID_RESOLUTION_);
     MAP_GRID_SIZE_Y_ = std::floor((map_y_upper_ - map_y_lower_) / MAP_GRID_RESOLUTION_);
 
@@ -181,14 +181,15 @@ inline bool PlanningMethod::LineCheck(double x0, double y0, double x1, double y1
 
 bool PlanningMethod::CheckCollision(const double &x, const double &y, const double &theta) {
     Timer timer;
-    Mat2d R;
+
+    Mat2d R; // 车辆的旋转矩阵
     R << std::cos(theta), -std::sin(theta),
             std::sin(theta), std::cos(theta);
 
     MatXd transformed_vehicle_shape;
     transformed_vehicle_shape.resize(8, 1);
 
-    for (unsigned int i = 0; i < 4u; ++ i) {
+    for (unsigned int i = 0; i < 4u; ++ i) { // 将车形状的每个点通过旋转矩阵 R 和平移向量 (x, y) 转换到全局坐标系中
         transformed_vehicle_shape.block<2, 1>(i * 2, 0)
                 = R * vehicle_shape_.block<2, 1>(i * 2, 0) + Vec2d(x, y);
     }
@@ -208,6 +209,15 @@ bool PlanningMethod::CheckCollision(const double &x, const double &y, const doub
     Vec2i transformed_pt_index_3 = Coordinate2MapGridIndex(
             transformed_vehicle_shape.block<2, 1>(6, 0)
     );
+
+    /*
+        检测车辆形状的四条线是否和障碍物有碰撞
+
+       0 ------------- 1
+        |             |
+        |             |
+       3 ------------- 2
+   */
 
     double y1, y0, x1, x0;
     // pt1 -> pt0
@@ -447,7 +457,7 @@ void PlanningMethod::GetNeighborNodes(const StateNode::Ptr &curr_node_ptr,
 }
 
 void PlanningMethod::DynamicModel(const double &step_size, const double &phi,
-                               double &x, double &y, double &theta) const { // 更新车辆位置和方向
+                               double &x, double &y, double &theta) const { // 更新车辆位置和方向 (以后轴为原点的运动模型)
     x = x + step_size * std::cos(theta);
     y = y + step_size * std::sin(theta);
 
@@ -512,7 +522,7 @@ double PlanningMethod::ComputeG(const StateNode::Ptr &current_node_ptr,
             }
         }
 
-    } else { // 倒车
+    } else { // 倒车 同上
 
         if (neighbor_node_ptr -> steering_grade_ != current_node_ptr -> steering_grade_) {
             if (neighbor_node_ptr -> steering_grade_ == 0) {
@@ -573,8 +583,8 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
         current_node_ptr -> node_status_ = StateNode::IN_CLOSESET;
         openset_.erase(openset_.begin());
 
-        // 距离足够近
-        if ((current_node_ptr -> state_.head(2) - goal_node_ptr -> state_.head(2)).norm() <= shot_distance_) {
+        // 当前点距离目标点足够近
+        if ((current_node_ptr -> state_.head(2) - goal_node_ptr -> state_.head(2)).norm() <= shot_distance_) { // 两个点的欧式距离
             double rs_length = 0.0;
 
             if (AnalyticExpansions(current_node_ptr, goal_node_ptr, rs_length)) {
@@ -587,6 +597,7 @@ bool PlanningMethod::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                     grid_node_ptr = grid_node_ptr -> parent_node_;
                     path_length_ = path_length_ + segment_length_;
                 }
+
                 path_length_ = path_length_ - segment_length_ + rs_length;
 
                 std::cout << "ComputeH use time(ms): " << compute_h_time << std::endl;

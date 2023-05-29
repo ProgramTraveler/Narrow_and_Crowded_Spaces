@@ -123,6 +123,7 @@ void PlanningMethodFlow::Run() {
                 current_init_pose_ptr_ -> pose.pose.position.y,
                 start_yaw
         );
+
         Vec3d goal_state = Vec3d(
                 current_goal_pose_ptr_ -> pose.position.x,
                 current_goal_pose_ptr_ -> pose.position.y,
@@ -137,14 +138,14 @@ void PlanningMethodFlow::Run() {
 
             nav_msgs::Path path_ros;
             geometry_msgs::PoseStamped pose_stamped;
-
-            for (const auto &pose: path) {
+            // 将 path 转换为 ROS 中的 nav_msgs::Path 类型
+            for (const auto &pose : path) { // 遍历位姿 将其转换为 ROS 中的位姿表示
                 pose_stamped.header.frame_id = "world";
                 pose_stamped.pose.position.x = pose.x();
                 pose_stamped.pose.position.y = pose.y();
                 pose_stamped.pose.position.z = 0.0;
 
-                pose_stamped.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.z());
+                pose_stamped.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.z()); // 将欧拉角转换为四元数
 
                 path_ros.poses.emplace_back(pose_stamped);
             }
@@ -152,7 +153,7 @@ void PlanningMethodFlow::Run() {
             path_ros.header.frame_id = "world";
             path_ros.header.stamp = ros::Time::now();
             static tf::TransformBroadcaster transform_broadcaster;
-            for (const auto &pose: path_ros.poses) {
+            for (const auto &pose : path_ros.poses) { // 遍历 path_ros.poses 将其转换为 tf::Transform 类型
                 tf::Transform transform;
                 transform.setOrigin(tf::Vector3(pose.pose.position.x, pose.pose.position.y, 0.0));
 
@@ -165,7 +166,7 @@ void PlanningMethodFlow::Run() {
 
                 transform_broadcaster.sendTransform(tf::StampedTransform(transform,
                                                                          ros::Time::now(), "world",
-                                                                         "ground_link")
+                                                                         "ground_link") // 发布到 ROS 系统
                 );
 
                 ros::Duration(0.05).sleep();
@@ -242,8 +243,8 @@ void PlanningMethodFlow::PublishVehiclePath(const VectorVec3d &path, double widt
         vehicle.scale.x = width;
         vehicle.scale.y = length;
         vehicle.scale.z = 0.01;
-        vehicle.color.a = 0.1;
 
+        vehicle.color.a = 0.1;
         vehicle.color.r = 1.0;
         vehicle.color.b = 0.0;
         vehicle.color.g = 0.0;
